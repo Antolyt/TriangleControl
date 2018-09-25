@@ -55,11 +55,14 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetButtonDown("Action" + players[activePlayer].controller))
         {
-
-            Vector3 clickPos = camera.ScreenToWorldPoint(Input.mousePosition) - Vector3.forward * camera.transform.position.z;
-            Line nearestLine = GetNearestLine(clickPos);
+            Vector3 pos = Vector3.zero;
+            if(Input.GetKeyDown(KeyCode.Mouse0))
+                pos = camera.ScreenToWorldPoint(Input.mousePosition) - Vector3.forward * camera.transform.position.z;
+            if(Input.GetButtonDown("Action" + players[activePlayer].controller))
+                pos = playerCursors[activePlayer].transform.position;
+            Line nearestLine = GetNearestLine(pos);
 
             if (nearestLine.controllingPlayer < 0)
             {
@@ -166,7 +169,7 @@ public class Player : MonoBehaviour {
 
                 if (!triangleFilled)
                 {
-                    activePlayer = (activePlayer + 1) % players.Length;
+                    activePlayer = (activePlayer + 1) % numberOfPlayers;
                 }
             }
         }
