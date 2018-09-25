@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AddPlayer : MonoBehaviour {
 
-    public Player_PlayerSelection[] player;
+    public Player_PlayerSelection[] players;
 
     private int[] controllerPlayerMatch;
     private ColorOfPlayer cop;
@@ -35,16 +36,16 @@ public class AddPlayer : MonoBehaviour {
                     int playerIndex = GetFirstFreePlayer();
                     controllerPlayerMatch[i] = playerIndex;
                     PlayerOptions.playerConfig[playerIndex].controller = i;
-                    player[playerIndex].SetActive(true);
+                    players[playerIndex].SetActive(true);
                     int color = cop.SetFirstFreeColor(playerIndex);
                     if (color >= 0)
-                        player[playerIndex].colorImage.color = cop.playerColor[color].color;
+                        players[playerIndex].colorImage.color = cop.playerColor[color].color;
                     timeStamp[i] = Time.time;
                 }
             }
             else
             {
-                if (!player[controllerPlayerMatch[i]].ready)
+                if (!players[controllerPlayerMatch[i]].ready)
                 {
                     // Change Color
                     if (timeStamp[i] + timeOffset < Time.time)
@@ -53,14 +54,16 @@ public class AddPlayer : MonoBehaviour {
                         {
                             int color = cop.DecreasePlayerColor(controllerPlayerMatch[i]);
                             if (color >= 0)
-                                player[controllerPlayerMatch[i]].colorImage.color = cop.playerColor[color].color;
+                                players[controllerPlayerMatch[i]].colorImage.color = cop.playerColor[color].color;
+                            players[controllerPlayerMatch[i]].AnimateLeftArrow();
                             timeStamp[i] = Time.time;
                         }
                         if (Input.GetAxis("Horizontal" + i) > 0)
                         {
                             int color = cop.IncreasePlayerColor(controllerPlayerMatch[i]);
                             if (color >= 0)
-                                player[controllerPlayerMatch[i]].colorImage.color = cop.playerColor[color].color;
+                                players[controllerPlayerMatch[i]].colorImage.color = cop.playerColor[color].color;
+                            players[controllerPlayerMatch[i]].AnimateRightArrow();
                             timeStamp[i] = Time.time;
                         }
                     }
@@ -68,7 +71,7 @@ public class AddPlayer : MonoBehaviour {
                     // Submit selection
                     if (Input.GetButtonDown("Submit" + i) || Input.GetButtonDown("Action" + i))
                     {
-                        player[controllerPlayerMatch[i]].SetReady(true);
+                        players[controllerPlayerMatch[i]].SetReady(true);
                     }
                 }
                 else
@@ -76,7 +79,29 @@ public class AddPlayer : MonoBehaviour {
                     // Cancel selection submission
                     if (Input.GetButtonDown("Cancel" + i))
                     {
-                        player[controllerPlayerMatch[i]].SetReady(false);
+                        players[controllerPlayerMatch[i]].SetReady(false);
+                    }
+
+                    // Submit selection
+                    if (Input.GetButtonDown("Submit" + i) || Input.GetButtonDown("Action" + i))
+                    {
+                        bool allPlayersReady = true;
+                        foreach (Player_PlayerSelection player in players)
+                        {
+                            if (!player.ready && player.IsActiv())
+                                allPlayersReady = false;
+                        }
+                        if (allPlayersReady)
+                        {
+                            for (int j = 0; j < players.Length; j++)
+                            {
+                                if (players[j].IsActiv())
+                                    PlayerOptions.playerConfig[controllerPlayerMatch[j]].color = players[controllerPlayerMatch[j]].colorImage.color;
+                            }
+                        }
+                            SceneManager.LoadScene("Gameplay");
+
+                        
                     }
                 }
             }

@@ -12,7 +12,10 @@ public class Player_PlayerSelection : MonoBehaviour {
     public GameObject readyText;
     public bool ready;
     public GameObject arrow_left;
+    public Animator arrow_leftAnimator;
     public GameObject arrow_right;
+    public Animator arrow_rightAnimator;
+
 
     public void Start()
     {
@@ -31,5 +34,20 @@ public class Player_PlayerSelection : MonoBehaviour {
         this.ready = ready;
         arrow_left.SetActive(!ready);
         arrow_right.SetActive(!ready);
+    }
+
+    public bool IsActiv()
+    {
+        return selector.activeSelf;
+    }
+
+    public void AnimateLeftArrow()
+    {
+        arrow_leftAnimator.SetTrigger("ButtonDown");
+    }
+
+    public void AnimateRightArrow()
+    {
+        arrow_rightAnimator.SetTrigger("ButtonDown");
     }
 }

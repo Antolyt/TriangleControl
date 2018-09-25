@@ -8,6 +8,9 @@ public class PlayerOptions : MonoBehaviour {
     public static int playerCount;
     public static PlayerConfig[] playerConfig;
 
+    public static float vertExtent;
+    public static float horzExtent;
+
     // Use this for initialization
     void Awake () {
         if(!instance)
@@ -24,7 +27,10 @@ public class PlayerOptions : MonoBehaviour {
         {
             Destroy(this);
         }
-	}
+
+        vertExtent = Camera.main.orthographicSize;
+        horzExtent = vertExtent * Screen.width / Screen.height;
+    }
 	
 	// Update is called once per frame
 	void Update () {

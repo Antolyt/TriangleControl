@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 224009396721641682}
   - component: {fileID: 222578625594982526}
   - component: {fileID: 114321651625803624}
+  - component: {fileID: 95542597959955328}
   m_Layer: 5
   m_Name: Arrow_right
   m_TagString: Untagged
@@ -171,6 +172,7 @@ GameObject:
   - component: {fileID: 224610100915215396}
   - component: {fileID: 222247581327251852}
   - component: {fileID: 114479166261856738}
+  - component: {fileID: 95719833974315688}
   m_Layer: 5
   m_Name: Arrow_left
   m_TagString: Untagged
@@ -178,6 +180,42 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!95 &95542597959955328
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1311178101469764}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d52a4001dc69e764e9b3ba7e8f7bbd9a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!95 &95719833974315688
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1835258981222318}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d52a4001dc69e764e9b3ba7e8f7bbd9a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114000358343951376
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,7 +321,9 @@ MonoBehaviour:
   readyText: {fileID: 1033050446527724}
   ready: 0
   arrow_left: {fileID: 1835258981222318}
+  arrow_leftAnimator: {fileID: 95719833974315688}
   arrow_right: {fileID: 1311178101469764}
+  arrow_rightAnimator: {fileID: 95542597959955328}
 --- !u!114 &114599219033558080
 MonoBehaviour:
   m_ObjectHideFlags: 1

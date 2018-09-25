@@ -10,21 +10,38 @@ public class Player : MonoBehaviour {
     public TriangleComplex tcb;
 
     public int activePlayer = 0;
-    public PlayerConfig[] players;
+    [HideInInspector]public int numberOfPlayers = 0;
+    public PlayerUIInfo[] players;
+    public float cursorSpeed;
+    public GameObject[] playerCursors;
     public Color lineColor;
 
     private void Start()
     {
+        for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
+        {
+            if (PlayerOptions.playerConfig[i].controller >= 0)
+            {
+                players[i].background.color = PlayerOptions.playerConfig[i].color;
+                playerCursors[i].GetComponent<SpriteRenderer>().color = PlayerOptions.playerConfig[i].color;
+                numberOfPlayers++;
+            }
+            else
+            {
+                players[i].gameObject.SetActive(false);
+            }
+        }
+
         float r = 0;
         float g = 0;
         float b = 0;
         float a = 0;
         for (int i = 0; i < players.Length; i++)
         {
-            r += players[i].color.r;
-            g += players[i].color.g;
-            b += players[i].color.b;
-            a += players[i].color.a;
+            r += players[i].background.color.r;
+            g += players[i].background.color.g;
+            b += players[i].background.color.b;
+            a += players[i].background.color.a;
         }
 
         r /= players.Length;
@@ -36,13 +53,15 @@ public class Player : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-        if (Input.GetKeyDown(KeyCode.Mouse0)) {
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
 
             Vector3 clickPos = camera.ScreenToWorldPoint(Input.mousePosition) - Vector3.forward * camera.transform.position.z;
             Line nearestLine = GetNearestLine(clickPos);
 
-            if(nearestLine.controllingPlayer < 0)
+            if (nearestLine.controllingPlayer < 0)
             {
                 nearestLine.controllingPlayer = activePlayer;
                 nearestLine.gameObject.GetComponent<SpriteRenderer>().color = lineColor;
@@ -51,31 +70,31 @@ public class Player : MonoBehaviour {
 
                 bool triangleFilled = false;
 
-                switch(nearestLine.type)
+                switch (nearestLine.type)
                 {
                     case lineType.upper:
-                        if(tsp.triangleStartPointPreviousUpper != null)
+                        if (tsp.triangleStartPointPreviousUpper != null)
                         {
-                            if(tsp.triangleStartPointPreviousUpper.lineMiddle.activeSelf && tsp.triangleStartPointPreviousUpper.lineLower.activeSelf
+                            if (tsp.triangleStartPointPreviousUpper.lineMiddle.activeSelf && tsp.triangleStartPointPreviousUpper.lineLower.activeSelf
                                 && tsp.triangleStartPointPreviousUpper.lineMiddle.GetComponent<Line>().controllingPlayer >= 0 && tsp.triangleStartPointPreviousUpper.lineLower.GetComponent<Line>().controllingPlayer >= 0)
                             {
                                 if (tsp.triangleStartPointPreviousUpper.triangleLower.activeSelf)
                                 {
-                                    tsp.triangleStartPointPreviousUpper.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].color;
+                                    tsp.triangleStartPointPreviousUpper.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
                                     players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
                                     triangleFilled = true;
                                     TriangleWasFilled();
                                 }
                             }
                         }
-                        if(tsp.triangleStartPointNextUpper != null)
+                        if (tsp.triangleStartPointNextUpper != null)
                         {
                             if (tsp.triangleStartPointNextUpper.lineLower.activeSelf && tsp.lineMiddle.activeSelf
                                 && tsp.triangleStartPointNextUpper.lineLower.GetComponent<Line>().controllingPlayer >= 0 && tsp.lineMiddle.GetComponent<Line>().controllingPlayer >= 0)
                             {
                                 if (tsp.triangleUpper.activeSelf)
                                 {
-                                    tsp.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].color;
+                                    tsp.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
                                     players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
                                     triangleFilled = true;
                                     TriangleWasFilled();
@@ -91,7 +110,7 @@ public class Player : MonoBehaviour {
                             {
                                 if (tsp.triangleUpper.activeSelf)
                                 {
-                                    tsp.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].color;
+                                    tsp.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
                                     players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
                                     triangleFilled = true;
                                     TriangleWasFilled();
@@ -105,7 +124,7 @@ public class Player : MonoBehaviour {
                             {
                                 if (tsp.triangleLower.activeSelf)
                                 {
-                                    tsp.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].color;
+                                    tsp.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
                                     players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
                                     triangleFilled = true;
                                     TriangleWasFilled();
@@ -121,7 +140,7 @@ public class Player : MonoBehaviour {
                             {
                                 if (tsp.triangleStartPointPreviousLower.triangleUpper.activeSelf)
                                 {
-                                    tsp.triangleStartPointPreviousLower.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].color;
+                                    tsp.triangleStartPointPreviousLower.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
                                     players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
                                     triangleFilled = true;
                                     TriangleWasFilled();
@@ -135,7 +154,7 @@ public class Player : MonoBehaviour {
                             {
                                 if (tsp.triangleLower.activeSelf)
                                 {
-                                    tsp.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].color;
+                                    tsp.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
                                     players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
                                     triangleFilled = true;
                                     TriangleWasFilled();
@@ -145,13 +164,22 @@ public class Player : MonoBehaviour {
                         break;
                 }
 
-                if(!triangleFilled)
+                if (!triangleFilled)
                 {
                     activePlayer = (activePlayer + 1) % players.Length;
                 }
             }
         }
-	}
+
+        for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
+        {
+            if (PlayerOptions.playerConfig[i].controller >= 0)
+            {
+                playerCursors[i].transform.position += cursorSpeed * Input.GetAxis("Horizontal" + PlayerOptions.playerConfig[i].controller) * Vector3.right + cursorSpeed * Input.GetAxis("Vertical" + PlayerOptions.playerConfig[i].controller) * Vector3.down;
+                playerCursors[i].transform.position = new Vector3(Math.Min(PlayerOptions.horzExtent, Math.Max(-PlayerOptions.horzExtent, playerCursors[i].transform.position.x)), Math.Min(PlayerOptions.vertExtent, Math.Max(-PlayerOptions.vertExtent, playerCursors[i].transform.position.y)), 0);
+            }
+        }
+    }
 
     public Line GetNearestLine(Vector3 pos)
     {
