@@ -4,17 +4,17 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(TriangleComplexBuilder))]
-public class TrianlgeComplexBuildereditor : Editor {
+public class TriangleComplexBuilderEditor : Editor {
 
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
         TriangleComplexBuilder builder = (TriangleComplexBuilder)target;
-        if(GUILayout.Button("Create"))
+        if (GUILayout.Button("Create"))
         {
             builder.BuildComplex();
         }
-        
+
     }
 }

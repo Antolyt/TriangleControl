@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class TriangleComplex : MonoBehaviour {
 
-    public List<Transform> lines;
+    public GameObject triangleContainer;
+    public GameObject lineContainer;
+    public List<Triangle> triangles;
+    public List<Line> lines;
 
     // Use this for initialization
     void Start () {

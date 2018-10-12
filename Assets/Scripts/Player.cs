@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
 
     public new Camera camera;
-    public TriangleComplex tcb;
+    public TriangleComplex triangleComplex;
 
     public int activePlayer = 0;
     [HideInInspector]public int numberOfPlayers = 0;
@@ -16,8 +16,13 @@ public class Player : MonoBehaviour {
     public GameObject[] playerCursors;
     public Color lineColor;
 
+    public delegate void UpdateMode(Line line, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer);
+    public UpdateMode updateMode;
+
     private void Start()
     {
+        //updateMode = UpdateMode_SingleTriangle;
+        updateMode = UpdateMode_MultipleTriangleWithoutOverride;
         for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
         {
             if (PlayerOptions.playerConfig[i].controller >= 0)
@@ -69,111 +74,11 @@ public class Player : MonoBehaviour {
                 nearestLine.controllingPlayer = activePlayer;
                 nearestLine.gameObject.GetComponent<SpriteRenderer>().color = lineColor;
 
-                TriangleStartPoint tsp = nearestLine.tsp;
-
-                bool triangleFilled = false;
-
-                switch (nearestLine.type)
-                {
-                    case lineType.upper:
-                        if (tsp.triangleStartPointPreviousUpper != null)
-                        {
-                            if (tsp.triangleStartPointPreviousUpper.lineMiddle.activeSelf && tsp.triangleStartPointPreviousUpper.lineLower.activeSelf
-                                && tsp.triangleStartPointPreviousUpper.lineMiddle.GetComponent<Line>().controllingPlayer >= 0 && tsp.triangleStartPointPreviousUpper.lineLower.GetComponent<Line>().controllingPlayer >= 0)
-                            {
-                                if (tsp.triangleStartPointPreviousUpper.triangleLower.activeSelf)
-                                {
-                                    tsp.triangleStartPointPreviousUpper.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
-                                    players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
-                                    triangleFilled = true;
-                                    TriangleWasFilled();
-                                }
-                            }
-                        }
-                        if (tsp.triangleStartPointNextUpper != null)
-                        {
-                            if (tsp.triangleStartPointNextUpper.lineLower.activeSelf && tsp.lineMiddle.activeSelf
-                                && tsp.triangleStartPointNextUpper.lineLower.GetComponent<Line>().controllingPlayer >= 0 && tsp.lineMiddle.GetComponent<Line>().controllingPlayer >= 0)
-                            {
-                                if (tsp.triangleUpper.activeSelf)
-                                {
-                                    tsp.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
-                                    players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
-                                    triangleFilled = true;
-                                    TriangleWasFilled();
-                                }
-                            }
-                        }
-                        break;
-                    case lineType.middle:
-                        if (tsp.triangleStartPointNextUpper != null)
-                        {
-                            if (tsp.triangleStartPointNextUpper.lineLower.activeSelf && tsp.lineUpper.activeSelf
-                                && tsp.triangleStartPointNextUpper.lineLower.GetComponent<Line>().controllingPlayer >= 0 && tsp.lineUpper.GetComponent<Line>().controllingPlayer >= 0)
-                            {
-                                if (tsp.triangleUpper.activeSelf)
-                                {
-                                    tsp.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
-                                    players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
-                                    triangleFilled = true;
-                                    TriangleWasFilled();
-                                }
-                            }
-                        }
-                        if (tsp.triangleStartPointNextLower != null)
-                        {
-                            if (tsp.triangleStartPointNextLower.lineUpper.activeSelf && tsp.lineLower.activeSelf
-                                && tsp.triangleStartPointNextLower.lineUpper.GetComponent<Line>().controllingPlayer >= 0 && tsp.lineLower.GetComponent<Line>().controllingPlayer >= 0)
-                            {
-                                if (tsp.triangleLower.activeSelf)
-                                {
-                                    tsp.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
-                                    players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
-                                    triangleFilled = true;
-                                    TriangleWasFilled();
-                                }
-                            }
-                        }
-                        break;
-                    case lineType.lower:
-                        if (tsp.triangleStartPointPreviousLower != null)
-                        {
-                            if (tsp.triangleStartPointPreviousLower.lineMiddle.activeSelf && tsp.triangleStartPointPreviousLower.lineUpper.activeSelf
-                                && tsp.triangleStartPointPreviousLower.lineMiddle.GetComponent<Line>().controllingPlayer >= 0 && tsp.triangleStartPointPreviousLower.lineUpper.GetComponent<Line>().controllingPlayer >= 0)
-                            {
-                                if (tsp.triangleStartPointPreviousLower.triangleUpper.activeSelf)
-                                {
-                                    tsp.triangleStartPointPreviousLower.triangleUpper.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
-                                    players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
-                                    triangleFilled = true;
-                                    TriangleWasFilled();
-                                }
-                            }
-                        }
-                        if (tsp.triangleStartPointNextLower != null)
-                        {
-                            if (tsp.triangleStartPointNextLower.lineUpper.activeSelf && tsp.lineMiddle.activeSelf
-                                && tsp.triangleStartPointNextLower.lineUpper.GetComponent<Line>().controllingPlayer >= 0 && tsp.lineMiddle.GetComponent<Line>().controllingPlayer >= 0)
-                            {
-                                if (tsp.triangleLower.activeSelf)
-                                {
-                                    tsp.triangleLower.GetComponent<SpriteRenderer>().color = players[activePlayer].background.color;
-                                    players[activePlayer].score.text = (int.Parse(players[activePlayer].score.text) + 1).ToString();
-                                    triangleFilled = true;
-                                    TriangleWasFilled();
-                                }
-                            }
-                        }
-                        break;
-                }
-
-                if (!triangleFilled)
-                {
-                    activePlayer = (activePlayer + 1) % numberOfPlayers;
-                }
+                updateMode(nearestLine, players, numberOfPlayers, activePlayer);
             }
         }
 
+        // Update Player cursors
         for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
         {
             if (PlayerOptions.playerConfig[i].controller >= 0)
@@ -188,14 +93,13 @@ public class Player : MonoBehaviour {
     {
         Line target = null;
         float minDis = float.MaxValue;
-        foreach(Transform t in tcb.lines)
+        foreach(Line line in triangleComplex.lines)
         {
-            if (t == null)
+            if (line == null || !line.gameObject.activeSelf)
                 continue;
 
             //ToDO effizienter
-            Line line = t.gameObject.GetComponent<Line>();
-            Vector3 tPos = t.position + line.centerVector;
+            Vector3 tPos = line.transform.position + line.GetCenter();
             float tmpDis = Vector3.Distance(pos, tPos);
             if (tmpDis <= minDis)
             {
@@ -207,7 +111,100 @@ public class Player : MonoBehaviour {
         return target;
     }
 
-    public void TriangleWasFilled()
+    public static void UpdateMode_SingleTriangle(Line updatedLine, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer)
+    {
+        foreach(Triangle triangle in updatedLine.triangles)
+        {
+            if(triangle == null)
+            {
+                continue;
+            }
+
+            bool allLinesControlled = true;
+            foreach(Line line in triangle.lines)
+            {
+                if(line.controllingPlayer != activePlayer)
+                {
+                    allLinesControlled = false;
+                    break;
+                }
+            }
+
+            if (allLinesControlled)
+            {
+                triangle.spriteRenderer.color = PlayerOptions.playerConfig[activePlayer].color;
+            }
+        }
+    }
+
+    public static void UpdateMode_MultipleTriangleWithoutOverride(Line updatedLine, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer)
+    {
+        foreach(Triangle triangle in updatedLine.triangles)
+        {
+            if(triangle == null)
+            {
+                continue;
+            }
+
+            Queue<Triangle> remainingTriangles = new Queue<Triangle>();
+            remainingTriangles.Enqueue(triangle);
+            List<Triangle> checkedTriangles = new List<Triangle>();
+            List<Line> checkedLines = new List<Line>();
+
+            bool isBordered = true;
+            while (remainingTriangles.Count > 0)
+            {
+                Triangle currentTriangle = remainingTriangles.Dequeue();
+                checkedTriangles.Add(currentTriangle);
+                foreach(Line line in currentTriangle.lines)
+                {
+                    if(checkedLines.Contains(line))
+                    {
+                        continue;
+                    }
+                    if(line.IsOuterLine() && line.controllingPlayer != activePlayer)
+                    {
+                        isBordered = false;
+                        break;
+                    }
+                    if(line.controllingPlayer == activePlayer)
+                    {
+                        checkedLines.Add(line);
+                        continue;
+                    }
+                    else
+                    {
+                        foreach(Triangle t in line.triangles)
+                        {
+                            if(t == null || checkedTriangles.Contains(t) || remainingTriangles.Contains(t))
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                remainingTriangles.Enqueue(t);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(isBordered)
+            {
+                foreach(Triangle t in checkedTriangles)
+                {
+                    t.spriteRenderer.color = PlayerOptions.playerConfig[activePlayer].color;
+                }
+            }
+        }
+    }
+
+    public static void UpdateMode_MultipleTriangleWithOverride(Line updatedLine, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer)
+    {
+
+    }
+
+    public static void TriangleWasFilled()
     {
         
     }
