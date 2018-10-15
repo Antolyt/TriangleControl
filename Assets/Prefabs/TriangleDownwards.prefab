@@ -208,6 +208,8 @@ MonoBehaviour:
   - {fileID: 114753828948633458}
   - {fileID: 0}
   id: 1
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  controllerColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114473046381974644
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -227,6 +229,8 @@ MonoBehaviour:
   - {fileID: 114753828948633458}
   - {fileID: 0}
   id: 0
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  controllerColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114747440508251414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,6 +250,8 @@ MonoBehaviour:
   - {fileID: 114753828948633458}
   - {fileID: 0}
   id: 2
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  controllerColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114753828948633458
 MonoBehaviour:
   m_ObjectHideFlags: 1

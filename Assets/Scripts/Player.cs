@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour {
     public float cursorSpeed;
     public GameObject[] playerCursors;
     public Color lineColor;
+    public Line[] selectedLines;
 
     public delegate void UpdateMode(Line line, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer);
     public UpdateMode updateMode;
@@ -60,6 +62,34 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        for(int i = 0; i < numberOfPlayers; i++)
+        {
+            UpdateCursor(i);
+        }
+
+        // Set roll over color
+        for(int i = 0; i < selectedLines.Length; i++)
+        {
+            if (selectedLines[i] == null)
+                continue;
+
+            float r = selectedLines[i].controllerColor.r;
+            float g = selectedLines[i].controllerColor.g;
+            float b = selectedLines[i].controllerColor.b;
+            float a = selectedLines[i].controllerColor.a;
+            r += players[i].background.color.r;
+            g += players[i].background.color.g;
+            b += players[i].background.color.b;
+            a += players[i].background.color.a;
+
+            r /= 2;
+            g /= 2;
+            b /= 2;
+            a /= 2;
+
+            selectedLines[i].sr.color = new Color(r, g, b, a);
+        }
+
         if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetButtonDown("Action" + players[activePlayer].controller))
         {
             Vector3 pos = Vector3.zero;
@@ -67,12 +97,14 @@ public class Player : MonoBehaviour {
                 pos = camera.ScreenToWorldPoint(Input.mousePosition) - Vector3.forward * camera.transform.position.z;
             if(Input.GetButtonDown("Action" + players[activePlayer].controller))
                 pos = playerCursors[activePlayer].transform.position;
-            Line nearestLine = GetNearestLine(pos);
+            //Line nearestLine = GetNearestLine(pos);
+            Line nearestLine = selectedLines[activePlayer];
 
             if (nearestLine.controllingPlayer < 0)
             {
                 nearestLine.controllingPlayer = activePlayer;
-                nearestLine.gameObject.GetComponent<SpriteRenderer>().color = lineColor;
+                nearestLine.sr.color = lineColor;
+                nearestLine.controllerColor = lineColor;
 
                 updateMode(nearestLine, players, numberOfPlayers, activePlayer);
             }
@@ -87,6 +119,59 @@ public class Player : MonoBehaviour {
                 playerCursors[i].transform.position = new Vector3(Math.Min(PlayerOptions.horzExtent, Math.Max(-PlayerOptions.horzExtent, playerCursors[i].transform.position.x)), Math.Min(PlayerOptions.vertExtent, Math.Max(-PlayerOptions.vertExtent, playerCursors[i].transform.position.y)), 0);
             }
         }
+    }
+
+    public void UpdateCursor(int player)
+    {
+        Line target = null;
+        float minDis = float.MaxValue;
+
+        if (selectedLines[player] == null)
+        {
+            foreach (Line line in triangleComplex.lines)
+            {
+                if (line == null || !line.gameObject.activeSelf)
+                    continue;
+
+                Vector3 tPos = line.transform.position + line.GetCenter();
+                float tmpDis = Vector3.Distance(playerCursors[player].transform.position, tPos);
+                if (tmpDis <= minDis)
+                {
+                    minDis = tmpDis;
+                    target = line;
+                }
+            }
+        }
+        else
+        {
+            foreach (Triangle t in selectedLines[player].triangles)
+            {
+                if (t == null)
+                    continue;
+
+                foreach (Line l in t.lines)
+                {
+                    if (l == null)
+                        continue;
+
+                    Vector3 tPos = l.transform.position + l.GetCenter();
+                    float tmpDis = Vector3.Distance(playerCursors[player].transform.position, tPos);
+                    if (tmpDis <= minDis)
+                    {
+                        minDis = tmpDis;
+                        target = l;
+                    }
+                }
+            }
+
+            // reset line Color if line was left
+            if (selectedLines[player] != target)
+            {
+                selectedLines[player].sr.color = selectedLines[player].controllerColor;
+            }
+        }
+
+        selectedLines[player] = target;
     }
 
     public Line GetNearestLine(Vector3 pos)

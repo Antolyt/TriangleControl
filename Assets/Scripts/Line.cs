@@ -18,6 +18,9 @@ public class Line : MonoBehaviour {
     public Triangle[] triangles;
     public int id;
 
+    public Color defaultColor;
+    public Color controllerColor;
+
 	// Use this for initialization
 	void Start () {
         
