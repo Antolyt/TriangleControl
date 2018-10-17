@@ -18,7 +18,7 @@ public class Player : MonoBehaviour {
     public Color lineColor;
     public Line[] selectedLines;
 
-    public delegate void UpdateMode(Line line, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer);
+    public delegate void UpdateMode(Line line, Player player);
     public UpdateMode updateMode;
 
     private void Start()
@@ -90,7 +90,7 @@ public class Player : MonoBehaviour {
             selectedLines[i].sr.color = new Color(r, g, b, a);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetButtonDown("Action" + players[activePlayer].controller))
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetButtonDown("Action" + PlayerOptions.playerConfig[activePlayer].controller))
         {
             Vector3 pos = Vector3.zero;
             if(Input.GetKeyDown(KeyCode.Mouse0))
@@ -106,7 +106,7 @@ public class Player : MonoBehaviour {
                 nearestLine.sr.color = lineColor;
                 nearestLine.controllerColor = lineColor;
 
-                updateMode(nearestLine, players, numberOfPlayers, activePlayer);
+                updateMode(nearestLine, this);
             }
         }
 
@@ -196,7 +196,7 @@ public class Player : MonoBehaviour {
         return target;
     }
 
-    public static void UpdateMode_SingleTriangle(Line updatedLine, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer)
+    public static void UpdateMode_SingleTriangle(Line updatedLine, Player player)
     {
         foreach(Triangle triangle in updatedLine.triangles)
         {
@@ -208,7 +208,7 @@ public class Player : MonoBehaviour {
             bool allLinesControlled = true;
             foreach(Line line in triangle.lines)
             {
-                if(line.controllingPlayer != activePlayer)
+                if(line.controllingPlayer != player.activePlayer)
                 {
                     allLinesControlled = false;
                     break;
@@ -217,12 +217,12 @@ public class Player : MonoBehaviour {
 
             if (allLinesControlled)
             {
-                triangle.spriteRenderer.color = PlayerOptions.playerConfig[activePlayer].color;
+                triangle.spriteRenderer.color = PlayerOptions.playerConfig[player.activePlayer].color;
             }
         }
     }
 
-    public static void UpdateMode_MultipleTriangleWithoutOverride(Line updatedLine, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer)
+    public static void UpdateMode_MultipleTriangleWithoutOverride(Line updatedLine, Player player)
     {
         foreach(Triangle triangle in updatedLine.triangles)
         {
@@ -247,12 +247,12 @@ public class Player : MonoBehaviour {
                     {
                         continue;
                     }
-                    if(line.IsOuterLine() && line.controllingPlayer != activePlayer)
+                    if(line.IsOuterLine() && line.controllingPlayer != player.activePlayer)
                     {
                         isBordered = false;
                         break;
                     }
-                    if(line.controllingPlayer == activePlayer)
+                    if(line.controllingPlayer == player.activePlayer)
                     {
                         checkedLines.Add(line);
                         continue;
@@ -271,6 +271,7 @@ public class Player : MonoBehaviour {
                             }
                         }
                     }
+                    checkedLines.Add(line);
                 }
             }
 
@@ -278,13 +279,19 @@ public class Player : MonoBehaviour {
             {
                 foreach(Triangle t in checkedTriangles)
                 {
-                    t.spriteRenderer.color = PlayerOptions.playerConfig[activePlayer].color;
+                    t.TakeControl(player);
+                }
+                
+                foreach(Line l in checkedLines)
+                {
+                    l.TakeControl(player);
                 }
             }
         }
+        player.activePlayer = (player.activePlayer + 1) % player.numberOfPlayers;
     }
 
-    public static void UpdateMode_MultipleTriangleWithOverride(Line updatedLine, PlayerUIInfo[] players, int numberOfPlayers, int activePlayer)
+    public static void UpdateMode_MultipleTriangleWithOverride(Line updatedLine, Player player)
     {
 
     }

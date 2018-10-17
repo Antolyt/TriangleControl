@@ -31,6 +31,13 @@ public class Line : MonoBehaviour {
 		
 	}
 
+    public void TakeControl(Player player)
+    {
+        sr.color = PlayerOptions.playerConfig[player.activePlayer].color;
+        controllerColor = PlayerOptions.playerConfig[player.activePlayer].color;
+        controllingPlayer = player.activePlayer;
+    }
+
     public float GetLength()
     {
         return this.gameObject.GetComponent<SpriteRenderer>().bounds.size.x;

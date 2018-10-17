@@ -21,7 +21,13 @@ public class AddPlayer : MonoBehaviour {
         timeStamp = new float[4];
 
         cop = this.transform.GetComponent<ColorOfPlayer>();
-	}
+
+        PlayerOptions.playerConfig = new PlayerConfig[4];
+        for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
+        {
+            PlayerOptions.playerConfig[i].controller = -1;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -95,7 +101,7 @@ public class AddPlayer : MonoBehaviour {
                         {
                             for (int j = 0; j < players.Length; j++)
                             {
-                                if (players[j].IsActiv())
+                                if (controllerPlayerMatch[j] >= 0 && players[controllerPlayerMatch[j]].IsActiv())
                                     PlayerOptions.playerConfig[controllerPlayerMatch[j]].color = players[controllerPlayerMatch[j]].colorImage.color;
                             }
                         }
