@@ -14,9 +14,13 @@ public class Player : MonoBehaviour {
     [HideInInspector]public int numberOfPlayers = 0;
     public PlayerUIInfo[] players;
     public float cursorSpeed;
+    public float cursorCap;         // Between 0 and 1
     public GameObject[] playerCursors;
     public Color lineColor;
     public Line[] selectedLines;
+
+    public Vector3 cap;
+    public Vector3 tilt;
 
     public delegate void UpdateMode(Line line, Player player);
     public UpdateMode updateMode;
@@ -87,7 +91,7 @@ public class Player : MonoBehaviour {
             b /= 2;
             a /= 2;
 
-            selectedLines[i].sr.color = new Color(r, g, b, a);
+            selectedLines[i].sr_gradiant.color = new Color(r, g, b, a);
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetButtonDown("Action" + PlayerOptions.playerConfig[activePlayer].controller))
@@ -103,7 +107,7 @@ public class Player : MonoBehaviour {
             if (nearestLine.controllingPlayer < 0)
             {
                 nearestLine.controllingPlayer = activePlayer;
-                nearestLine.sr.color = lineColor;
+                nearestLine.sr_gradiant.color = lineColor;
                 nearestLine.controllerColor = lineColor;
 
                 updateMode(nearestLine, this);
@@ -115,7 +119,13 @@ public class Player : MonoBehaviour {
         {
             if (PlayerOptions.playerConfig[i].controller >= 0)
             {
-                playerCursors[i].transform.position += cursorSpeed * Input.GetAxis("Horizontal" + PlayerOptions.playerConfig[i].controller) * Vector3.right + cursorSpeed * Input.GetAxis("Vertical" + PlayerOptions.playerConfig[i].controller) * Vector3.down;
+                Vector3 input = new Vector3(Input.GetAxis("Horizontal" + PlayerOptions.playerConfig[i].controller), Input.GetAxis("Vertical" + PlayerOptions.playerConfig[i].controller));
+                Vector3 capping = input.normalized;
+                capping = capping * cursorCap;
+                if (input.magnitude > capping.magnitude)
+                    input = capping;
+                playerCursors[i].transform.position += cursorSpeed * input.x * Vector3.right + cursorSpeed * input.y * Vector3.down;
+                //playerCursors[i].transform.position += cursorSpeed * Math.Max(-capping.x, Math.Min(capping.x, input.x)) * Vector3.right + cursorSpeed * Math.Max(-capping.y, Math.Min(capping.y, input.y)) * Vector3.down;
                 playerCursors[i].transform.position = new Vector3(Math.Min(PlayerOptions.horzExtent, Math.Max(-PlayerOptions.horzExtent, playerCursors[i].transform.position.x)), Math.Min(PlayerOptions.vertExtent, Math.Max(-PlayerOptions.vertExtent, playerCursors[i].transform.position.y)), 0);
             }
         }
@@ -144,7 +154,7 @@ public class Player : MonoBehaviour {
         }
         else
         {
-            foreach (Triangle t in selectedLines[player].triangles)
+            foreach (TrianglePiece t in selectedLines[player].trianglePieces)
             {
                 if (t == null)
                     continue;
@@ -167,7 +177,7 @@ public class Player : MonoBehaviour {
             // reset line Color if line was left
             if (selectedLines[player] != target)
             {
-                selectedLines[player].sr.color = selectedLines[player].controllerColor;
+                selectedLines[player].sr_gradiant.color = selectedLines[player].controllerColor;
             }
         }
 
@@ -198,15 +208,15 @@ public class Player : MonoBehaviour {
 
     public static void UpdateMode_SingleTriangle(Line updatedLine, Player player)
     {
-        foreach(Triangle triangle in updatedLine.triangles)
+        foreach(TrianglePiece trianlgePiece in updatedLine.trianglePieces)
         {
-            if(triangle == null)
+            if(trianlgePiece == null)
             {
                 continue;
             }
 
             bool allLinesControlled = true;
-            foreach(Line line in triangle.lines)
+            foreach(Line line in trianlgePiece.lines)
             {
                 if(line.controllingPlayer != player.activePlayer)
                 {
@@ -217,29 +227,29 @@ public class Player : MonoBehaviour {
 
             if (allLinesControlled)
             {
-                triangle.spriteRenderer.color = PlayerOptions.playerConfig[player.activePlayer].color;
+                trianlgePiece.triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
             }
         }
     }
 
     public static void UpdateMode_MultipleTriangleWithoutOverride(Line updatedLine, Player player)
     {
-        foreach(Triangle triangle in updatedLine.triangles)
+        foreach(TrianglePiece triangle in updatedLine.trianglePieces)
         {
             if(triangle == null)
             {
                 continue;
             }
 
-            Queue<Triangle> remainingTriangles = new Queue<Triangle>();
+            Queue<TrianglePiece> remainingTriangles = new Queue<TrianglePiece>();
             remainingTriangles.Enqueue(triangle);
-            List<Triangle> checkedTriangles = new List<Triangle>();
+            List<TrianglePiece> checkedTriangles = new List<TrianglePiece>();
             List<Line> checkedLines = new List<Line>();
 
             bool isBordered = true;
             while (remainingTriangles.Count > 0)
             {
-                Triangle currentTriangle = remainingTriangles.Dequeue();
+                TrianglePiece currentTriangle = remainingTriangles.Dequeue();
                 checkedTriangles.Add(currentTriangle);
                 foreach(Line line in currentTriangle.lines)
                 {
@@ -259,7 +269,7 @@ public class Player : MonoBehaviour {
                     }
                     else
                     {
-                        foreach(Triangle t in line.triangles)
+                        foreach(TrianglePiece t in line.trianglePieces)
                         {
                             if(t == null || checkedTriangles.Contains(t) || remainingTriangles.Contains(t))
                             {
@@ -277,7 +287,7 @@ public class Player : MonoBehaviour {
 
             if(isBordered)
             {
-                foreach(Triangle t in checkedTriangles)
+                foreach(TrianglePiece t in checkedTriangles)
                 {
                     t.TakeControl(player);
                 }

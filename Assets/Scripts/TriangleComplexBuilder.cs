@@ -9,19 +9,19 @@ public class TriangleComplexBuilder : MonoBehaviour {
 
     public GameObject parentObject;
     public Sprite spawnMask;
-    public GameObject upwardTriangle;
-    public GameObject downwardTriangle;
+    public GameObject trianglePieceUp;
+    public GameObject trianglePieceDown;
     public float resolution;
     public float scale;
 
-    public Triangle[,] matrix;
+    public TrianglePiece[,] matrix;
 
     public void BuildComplex()
     {
-        Triangle triangleUpward = upwardTriangle.GetComponent<Triangle>();
-        Triangle triangleDownward = downwardTriangle.GetComponent<Triangle>();
+        TrianglePiece triangleUpward = trianglePieceUp.GetComponent<TrianglePiece>();
+        TrianglePiece triangleDownward = trianglePieceDown.GetComponent<TrianglePiece>();
 
-        matrix = new Triangle[(int)(spawnMask.texture.width * 4 * scale * resolution + 1), (int)(spawnMask.texture.height * 4 * scale * resolution) + 2];
+        matrix = new TrianglePiece[(int)(spawnMask.texture.width * 4 * scale * resolution + 1), (int)(spawnMask.texture.height * 4 * scale * resolution) + 2];
 
         GameObject triangleComplex = GameObject.Instantiate<GameObject>(parentObject);
         TriangleComplex tc = triangleComplex.GetComponent<TriangleComplex>();
@@ -34,7 +34,7 @@ public class TriangleComplexBuilder : MonoBehaviour {
             {
                 for (int j = 0; j < spawnMask.texture.width * scale * resolution; j++)
                 {
-                    GameObject go = GameObject.Instantiate(upwardTriangle);
+                    GameObject go = GameObject.Instantiate(trianglePieceUp);
                     go.transform.parent = tc.triangleContainer.transform;
                     go.transform.localScale /= resolution;
                     if (i % 4 == 0)
@@ -42,7 +42,7 @@ public class TriangleComplexBuilder : MonoBehaviour {
                     else
                         go.transform.localPosition = new Vector3((j + 0.5f) * triangleUpward.GetLength() / resolution, i * triangleUpward.GetHeight() / resolution / 2, 0);
 
-                    Triangle goTriangle = go.GetComponent<Triangle>();
+                    TrianglePiece goTriangle = go.GetComponent<TrianglePiece>();
                     tc.triangles.Add(goTriangle);
                     goTriangle.id = triangleId++;
                     foreach(Line line in goTriangle.lines)
@@ -74,15 +74,15 @@ public class TriangleComplexBuilder : MonoBehaviour {
             {
                 for (int j = 0; j < spawnMask.texture.width * scale * resolution; j++)
                 {
-                    GameObject go = GameObject.Instantiate(downwardTriangle);
+                    GameObject go = GameObject.Instantiate(trianglePieceDown);
                     go.transform.parent = tc.triangleContainer.transform;
                     go.transform.localScale /= resolution;
                     if (i % 4 == 1)
-                        go.transform.localPosition = new Vector3((j + 0.5f) * triangleDownward.GetLength() / resolution, (i+1f) * triangleDownward.GetHeight() / resolution / 2, 0);
+                        go.transform.localPosition = new Vector3((j + 0.5f) * triangleDownward.GetLength() / resolution, (i-1/3f) * triangleDownward.GetHeight() / resolution / 2, 0);
                     else
-                        go.transform.localPosition = new Vector3((j) * triangleDownward.GetLength() / resolution, (i+1f) * triangleDownward.GetHeight() / resolution / 2, 0);
+                        go.transform.localPosition = new Vector3((j) * triangleDownward.GetLength() / resolution, (i-1/3f) * triangleDownward.GetHeight() / resolution / 2, 0);
 
-                    Triangle goTriangle = go.GetComponent<Triangle>();
+                    TrianglePiece goTriangle = go.GetComponent<TrianglePiece>();
                     tc.triangles.Add(goTriangle);
                     goTriangle.id = triangleId++;
                     foreach (Line line in goTriangle.lines)
@@ -125,14 +125,14 @@ public class TriangleComplexBuilder : MonoBehaviour {
                             tc.lines.Remove(matrix[i + 1, j].lines[2]);
                             GameObject.DestroyImmediate(matrix[i + 1, j].lines[2].gameObject);
                             matrix[i + 1, j].lines[2] = matrix[i, j].lines[1];
-                            matrix[i + 1, j].lines[2].triangles[1] = matrix[i + 1, j];
+                            matrix[i + 1, j].lines[2].trianglePieces[1] = matrix[i + 1, j];
                         }
                         if (j + i < matrix.GetLength(1) && matrix[i, j + 1] != null)
                         {
                             tc.lines.Remove(matrix[i, j + 1].lines[1]);
                             GameObject.DestroyImmediate(matrix[i, j + 1].lines[1].gameObject);
                             matrix[i, j + 1].lines[1] = matrix[i, j].lines[0];
-                            matrix[i, j + 1].lines[1].triangles[1] = matrix[i, j + 1];
+                            matrix[i, j + 1].lines[1].trianglePieces[1] = matrix[i, j + 1];
                         }
                     }
                     if (matrix[i, j].type == TriangleTyp.up)
@@ -142,7 +142,7 @@ public class TriangleComplexBuilder : MonoBehaviour {
                             tc.lines.Remove(matrix[i + 1, j].lines[2]);
                             GameObject.DestroyImmediate(matrix[i + 1, j].lines[2].gameObject);
                             matrix[i + 1, j].lines[2] = matrix[i, j].lines[0];
-                            matrix[i + 1, j].lines[2].triangles[1] = matrix[i + 1, j];
+                            matrix[i + 1, j].lines[2].trianglePieces[1] = matrix[i + 1, j];
                         }
 
                     }
@@ -150,7 +150,7 @@ public class TriangleComplexBuilder : MonoBehaviour {
             }
         }
 
-        foreach(Triangle triangle in tc.triangles)
+        foreach(TrianglePiece triangle in tc.triangles)
         {
             if(triangle.gameObject.activeSelf)
             {

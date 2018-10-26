@@ -13,18 +13,23 @@ public class Line : MonoBehaviour {
 
     public lineType type;
     public Vector3 centerVector;
-    public SpriteRenderer sr;
+    public SpriteRenderer sr_background;
+    public SpriteRenderer sr_border;
+    public SpriteRenderer sr_gradiant;
+    public SpriteRenderer sr_grid;
     public int controllingPlayer = -1;
-    public Triangle[] triangles;
+    public TrianglePiece[] trianglePieces;
     public int id;
 
     public Color defaultColor;
     public Color controllerColor;
 
+    public Vector3 center;
+
 	// Use this for initialization
 	void Start () {
         
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -33,34 +38,35 @@ public class Line : MonoBehaviour {
 
     public void TakeControl(Player player)
     {
-        sr.color = PlayerOptions.playerConfig[player.activePlayer].color;
+        sr_gradiant.color = PlayerOptions.playerConfig[player.activePlayer].color;
         controllerColor = PlayerOptions.playerConfig[player.activePlayer].color;
         controllingPlayer = player.activePlayer;
     }
 
     public float GetLength()
     {
-        return this.gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+        return sr_border.gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
     public Vector3 GetCenter()
     {
-        switch(type)
-        {
-            case lineType.rising:
-                 return GetLineRisingCenterVector();
-            case lineType.horizontal:
-                return GetLineHorizontalCenterVector();
-            case lineType.falling:
-                return GetLineFallingCenterVector();
-            default:
-                throw new UnityException("line type is not defined!");
-        }
+        //switch(type)
+        //{
+        //    case lineType.rising:
+        //         return GetLineRisingCenterVector();
+        //    case lineType.horizontal:
+        //        return GetLineHorizontalCenterVector();
+        //    case lineType.falling:
+        //        return GetLineFallingCenterVector();
+        //    default:
+        //        throw new UnityException("line type is not defined!");
+        //}
+        return Vector3.zero;
     }
 
     public bool IsOuterLine()
     {
-        foreach(Triangle triangle in triangles)
+        foreach(TrianglePiece triangle in trianglePieces)
         {
             if (triangle == null)
                 return true;

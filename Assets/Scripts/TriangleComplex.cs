@@ -6,7 +6,7 @@ public class TriangleComplex : MonoBehaviour {
 
     public GameObject triangleContainer;
     public GameObject lineContainer;
-    public List<Triangle> triangles;
+    public List<TrianglePiece> triangles;
     public List<Line> lines;
 
     // Use this for initialization
