@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TriangleComplexBuilder : MonoBehaviour {
 
-    public Player player;
-
     public GameObject parentObject;
     public Sprite spawnMask;
     public GameObject trianglePieceUp;

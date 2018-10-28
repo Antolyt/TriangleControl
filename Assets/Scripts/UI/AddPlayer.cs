@@ -15,10 +15,17 @@ public class AddPlayer : MonoBehaviour {
     float[] timeStamp;
     public const float timeOffset = 0.25f;
 
+    public string sceneAfterSelection;
+    public string sceneByCancel;
+
+    public float[] timeOfCancelPress;    // = time, if not pressed
+    public float cancelTime;
+
 	// Use this for initialization
 	void Start () {
 		controllerPlayerMatch = new int[4]{ -1, -1, -1, -1 };
         timeStamp = new float[4];
+        timeOfCancelPress = new float[4];
 
         cop = this.transform.GetComponent<ColorOfPlayer>();
 
@@ -48,6 +55,8 @@ public class AddPlayer : MonoBehaviour {
                         players[playerIndex].colorImage.color = cop.playerColor[color].color;
                     timeStamp[i] = Time.time;
                 }
+
+                CancelSelection(i);
             }
             else
             {
@@ -79,6 +88,9 @@ public class AddPlayer : MonoBehaviour {
                     {
                         players[controllerPlayerMatch[i]].SetReady(true);
                     }
+
+                    // Go to MainMenu
+                    CancelSelection(i);
                 }
                 else
                 {
@@ -105,9 +117,7 @@ public class AddPlayer : MonoBehaviour {
                                     PlayerOptions.playerConfig[controllerPlayerMatch[j]].color = players[controllerPlayerMatch[j]].colorImage.color;
                             }
                         }
-                            SceneManager.LoadScene("Gameplay");
-
-                        
+                            SceneManager.LoadScene(sceneAfterSelection);
                     }
                 }
             }
@@ -141,5 +151,21 @@ public class AddPlayer : MonoBehaviour {
             }
         }
         return -1;
+    }
+
+    public void CancelSelection(int controller)
+    {
+        // Go backwards
+        if (Input.GetButton("Cancel" + controller))
+        {
+            if (timeOfCancelPress[controller] + cancelTime <= Time.time)
+            {
+                SceneManager.LoadScene(sceneByCancel);
+            }
+        }
+        else
+        {
+            timeOfCancelPress[controller] = Time.time;
+        }
     }
 }

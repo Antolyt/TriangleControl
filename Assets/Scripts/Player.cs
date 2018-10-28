@@ -35,6 +35,8 @@ public class Player : MonoBehaviour {
             {
                 players[i].background.color = PlayerOptions.playerConfig[i].color;
                 playerCursors[i].GetComponent<SpriteRenderer>().color = PlayerOptions.playerConfig[i].color;
+                playerCursors[i].SetActive(true);
+                PlayerOptions.playerConfig[i].score = players[i].score;
                 numberOfPlayers++;
             }
             else
@@ -94,7 +96,13 @@ public class Player : MonoBehaviour {
             selectedLines[i].sr_gradiant.color = new Color(r, g, b, a);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetButtonDown("Action" + PlayerOptions.playerConfig[activePlayer].controller))
+        // MouseControl
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+
+        }
+
+        if (PlayerOptions.playerConfig[activePlayer].controller >= 0 && Input.GetButtonDown("Action" + PlayerOptions.playerConfig[activePlayer].controller))
         {
             Vector3 pos = Vector3.zero;
             if(Input.GetKeyDown(KeyCode.Mouse0))
@@ -106,10 +114,6 @@ public class Player : MonoBehaviour {
 
             if (nearestLine.controllingPlayer < 0)
             {
-                nearestLine.controllingPlayer = activePlayer;
-                nearestLine.sr_gradiant.color = lineColor;
-                nearestLine.controllerColor = lineColor;
-
                 updateMode(nearestLine, this);
             }
         }
@@ -208,7 +212,11 @@ public class Player : MonoBehaviour {
 
     public static void UpdateMode_SingleTriangle(Line updatedLine, Player player)
     {
-        foreach(TrianglePiece trianlgePiece in updatedLine.trianglePieces)
+        updatedLine.controllingPlayer = player.activePlayer;
+        updatedLine.sr_gradiant.color = player.lineColor;
+        updatedLine.controllerColor = player.lineColor;
+
+        foreach (TrianglePiece trianlgePiece in updatedLine.trianglePieces)
         {
             if(trianlgePiece == null)
             {
@@ -234,6 +242,8 @@ public class Player : MonoBehaviour {
 
     public static void UpdateMode_MultipleTriangleWithoutOverride(Line updatedLine, Player player)
     {
+        updatedLine.TakeControl(player);
+
         foreach(TrianglePiece triangle in updatedLine.trianglePieces)
         {
             if(triangle == null)

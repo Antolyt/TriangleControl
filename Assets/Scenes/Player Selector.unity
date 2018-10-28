@@ -878,6 +878,10 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1272511313272834, guid: fbb6629ac9dd3b941becee04c9746851, type: 2}
+      propertyPath: m_Name
+      value: Player_1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbb6629ac9dd3b941becee04c9746851, type: 2}
   m_IsPrefabAsset: 0
@@ -1004,6 +1008,10 @@ MonoBehaviour:
   - {fileID: 2124171600}
   - {fileID: 942751397}
   - {fileID: 1886825037}
+  sceneAfterSelection: Level Selector
+  sceneByCancel: MainMenu
+  timeOfCancelPress: []
+  cancelTime: 1
 --- !u!114 &1777107855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,13 +1028,13 @@ MonoBehaviour:
     assignedPlayer: 0
   - color: {r: 0, g: 0.22745098, b: 0.9137255, a: 1}
     assignedPlayer: 0
-  - color: {r: 0, g: 1, b: 0.9098039, a: 1}
+  - color: {r: 0, g: 0.8301887, b: 0.75530887, a: 1}
     assignedPlayer: 0
-  - color: {r: 0, g: 0.8666667, b: 0.023529412, a: 1}
+  - color: {r: 0, g: 0.8113208, b: 0.022026904, a: 1}
     assignedPlayer: 0
   - color: {r: 0.92941177, g: 0.9529412, b: 0, a: 1}
     assignedPlayer: 0
-  - color: {r: 0.85882354, g: 0.5411765, b: 0.011764706, a: 1}
+  - color: {r: 0.9433962, g: 0.6611514, b: 0, a: 1}
     assignedPlayer: 0
   - color: {r: 1, g: 0.56078434, b: 0.93333334, a: 1}
     assignedPlayer: 0

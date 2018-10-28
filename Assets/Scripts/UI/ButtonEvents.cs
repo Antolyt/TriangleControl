@@ -14,4 +14,9 @@ public class ButtonEvents : MonoBehaviour {
     {
         Application.Quit();
     }
+
+    public void SetLevelInPlayerOptions(string level)
+    {
+        PlayerOptions.level = level;
+    }
 }

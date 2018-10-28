@@ -7,6 +7,7 @@ public class PlayerOptions : MonoBehaviour {
     public static PlayerOptions instance { get; set; }
     public static int playerCount;
     public static PlayerConfig[] playerConfig;
+    public static string level;
 
     public static float vertExtent;
     public static float horzExtent;

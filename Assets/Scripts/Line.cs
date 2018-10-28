@@ -17,6 +17,8 @@ public class Line : MonoBehaviour {
     public SpriteRenderer sr_border;
     public SpriteRenderer sr_gradiant;
     public SpriteRenderer sr_grid;
+    private ParticleSystem ps;
+    private ParticleSystem.MainModule particleSettings;
     public int controllingPlayer = -1;
     public TrianglePiece[] trianglePieces;
     public int id;
@@ -28,7 +30,8 @@ public class Line : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
+        ps = GetComponent<ParticleSystem>();
+        particleSettings = ps.main;
     }
 	
 	// Update is called once per frame
@@ -40,6 +43,8 @@ public class Line : MonoBehaviour {
     {
         sr_gradiant.color = PlayerOptions.playerConfig[player.activePlayer].color;
         controllerColor = PlayerOptions.playerConfig[player.activePlayer].color;
+        particleSettings.startColor = PlayerOptions.playerConfig[player.activePlayer].color;
+        ps.Play();
         controllingPlayer = player.activePlayer;
     }
 

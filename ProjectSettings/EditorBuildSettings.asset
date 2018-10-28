@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Player Selector.unity
     guid: ee95c07a69a0da742bbea9c0a4b9e450
   - enabled: 1
+    path: Assets/Scenes/Level Selector.unity
+    guid: cd02c43b7e94d994c940b98c0d598522
+  - enabled: 1
     path: Assets/Scenes/Gameplay.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 1119d68b3000a6b48b9743b106fb2a38
   m_configObjects: {}
