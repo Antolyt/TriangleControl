@@ -19,4 +19,18 @@ public class ButtonEvents : MonoBehaviour {
     {
         PlayerOptions.level = level;
     }
+
+    public void TutorialButtonClick(Object element)
+    {
+        GameObject go = element as GameObject;
+        foreach (Transform child in go.transform.parent.GetComponentInChildren<Transform>())
+        {
+            child.gameObject.SetActive(false);
+        }
+        go.SetActive(true);
+
+        MarkLines markLines = go.GetComponent<MarkLines>();
+        if(markLines)
+            go.GetComponent<MarkLines>().Reset();
+    }
 }

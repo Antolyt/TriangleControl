@@ -9,8 +9,8 @@ public enum lineType
     falling
 }
 
-public class Line : MonoBehaviour {
-
+public class Line : FlexibleElement
+{
     public lineType type;
     public Vector3 centerVector;
     public SpriteRenderer sr_background;
@@ -28,16 +28,28 @@ public class Line : MonoBehaviour {
 
     public Vector3 center;
 
-	// Use this for initialization
-	void Start () {
+    protected override void OnSkinUI()
+    {
+        base.OnSkinUI();
+
+        sr_background.sprite = data.lineBackground;
+        sr_border.sprite = data.lineBorder;
+        sr_gradiant.sprite = data.lineGradiant;
+        sr_grid.sprite = data.lineGrid;
+
+        //sr_background.color = data.lineBackgroundColor;
+        //sr_border.color = data.lineBorderColor;
+        //sr_gradiant.color = data.lineGradiantColor;
+        //sr_grid.color = data.lineGridColor;
+
+        defaultColor = data.lineBackgroundColor;
+    }
+
+    // Use this for initialization
+    void Start () {
         ps = GetComponent<ParticleSystem>();
         particleSettings = ps.main;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void TakeControl(Player player)
     {
@@ -46,6 +58,27 @@ public class Line : MonoBehaviour {
         particleSettings.startColor = PlayerOptions.playerConfig[player.activePlayer].color;
         ps.Play();
         controllingPlayer = player.activePlayer;
+    }
+
+    public void TakeControl(int i, Color color)
+    {
+        sr_gradiant.color = color;
+        controllerColor = color;
+        particleSettings.startColor = color;
+        ps.Play();
+        controllingPlayer = i;
+    }
+
+    public void Reset()
+    {
+        sr_gradiant.color = defaultColor;
+        controllerColor = defaultColor;
+        if(ps)
+        {
+            ps.SetParticles(null, 0);
+            ps.Stop();
+        }
+        controllingPlayer = -1;
     }
 
     public float GetLength()

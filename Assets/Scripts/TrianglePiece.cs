@@ -75,6 +75,32 @@ public class TrianglePiece : MonoBehaviour {
         }
     }
 
+    public void TakeControl(int i, Color color)
+    {
+        switch (functionality)
+        {
+            case Functionality.normal:
+                triangle.sr_gradiant_hole.color = color;
+                controllingPlayer = 1;
+                break;
+            case Functionality.bomb:
+                //ActivateBomb(player);
+                break;
+            case Functionality.conquerNext:
+                //triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
+                //player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
+                //ConquerNext(player);
+                break;
+        }
+    }
+
+    public void Reset()
+    {
+        triangle.sr_gradiant_hole.color = Color.white;
+        controllingPlayer = -1;
+        this.gameObject.SetActive(true);
+    }
+
     /// <summary>
     /// Deactives current and connected Triangles, reduces controllers points by point value
     /// </summary>

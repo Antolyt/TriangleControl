@@ -713,6 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a1fb1e3a516d314f8d9376c58d2f6ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: c39f0648b0a147c418053671887b5636, type: 2}
   type: 2
   centerVector: {x: 0, y: 0, z: 0}
   sr_background: {fileID: 212611549565647084}
@@ -738,11 +739,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ccb71dec8ea1e418fb04b49fdcfe04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: c39f0648b0a147c418053671887b5636, type: 2}
   sr_background: {fileID: 212304455314066998}
   sr_border_inner: {fileID: 212462247059460202}
   sr_border_outer: {fileID: 212636974324380898}
   sr_gradiant: {fileID: 212084382719701930}
   sr_gradiant_hole: {fileID: 212997796124186028}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  controllerColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114530100481679330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -754,6 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a1fb1e3a516d314f8d9376c58d2f6ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: c39f0648b0a147c418053671887b5636, type: 2}
   type: 0
   centerVector: {x: 0, y: 0, z: 0}
   sr_background: {fileID: 212409080440134134}
@@ -779,6 +784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a1fb1e3a516d314f8d9376c58d2f6ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: c39f0648b0a147c418053671887b5636, type: 2}
   type: 1
   centerVector: {x: 0, y: 0, z: 0}
   sr_background: {fileID: 212541154445442380}
@@ -1330,7 +1336,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 1.5707963
-      minScalar: 0
+      minScalar: -1.5707963
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5920,7 +5926,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 1.5707963
-      minScalar: 0
+      minScalar: -1.5707963
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -10510,7 +10516,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 1.5707963
-      minScalar: 0
+      minScalar: -1.5707963
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14602,7 +14608,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e9a38189316645e4c94f21dbe0be1056, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -14659,7 +14665,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e9a38189316645e4c94f21dbe0be1056, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -14716,7 +14722,7 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e9a38189316645e4c94f21dbe0be1056, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
