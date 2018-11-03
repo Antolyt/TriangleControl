@@ -32,17 +32,17 @@ public class Line : FlexibleElement
     {
         base.OnSkinUI();
 
-        sr_background.sprite = data.lineBackground;
-        sr_border.sprite = data.lineBorder;
-        sr_gradiant.sprite = data.lineGradiant;
-        sr_grid.sprite = data.lineGrid;
+        //sr_background.sprite = data.lineBackground;
+        //sr_border.sprite = data.lineBorder;
+        //sr_gradiant.sprite = data.lineGradiant;
+        //sr_grid.sprite = data.lineGrid;
 
         //sr_background.color = data.lineBackgroundColor;
         //sr_border.color = data.lineBorderColor;
         //sr_gradiant.color = data.lineGradiantColor;
         //sr_grid.color = data.lineGridColor;
 
-        defaultColor = data.lineBackgroundColor;
+        //defaultColor = data.lineBackgroundColor;
     }
 
     // Use this for initialization
@@ -71,6 +71,7 @@ public class Line : FlexibleElement
 
     public void Reset()
     {
+        gameObject.SetActive(true);
         sr_gradiant.color = defaultColor;
         controllerColor = defaultColor;
         if(ps)

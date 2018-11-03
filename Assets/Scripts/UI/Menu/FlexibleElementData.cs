@@ -27,4 +27,20 @@ public class FlexibleElementData : ScriptableObject
     public Color lineGradiantColor;
     public Sprite lineGrid;
     public Color lineGridColor;
+
+    [Header("Functionality Sprites")]
+    public Sprite one;
+    public Sprite two;
+    public Sprite three;
+    public Sprite minus;
+    public Vector3 numberSize;
+    public Color numberColor;
+    [Space]
+    public Sprite bomb;
+    public Vector3 bombSize;
+    public Color bombColor;
+    [Space]
+    public Sprite arrow;
+    public Vector3 arrowSize;
+    public Color arrowColor;
 }

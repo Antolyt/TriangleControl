@@ -33,18 +33,6 @@ public class SoundManager : MonoBehaviour {
         backgroundSource.clip = menuMusic;
         backgroundSource.Play();
     }
-	
-    public void PlaySound(string name)
-    {
-        foreach(Sound sound in sounds)
-        {
-            if(sound.name == name)
-            {
-                effectSources[0].clip = sound.audioClip;
-                effectSources[0].Play();
-            }
-        }
-    }
 
 	// Update is called once per frame
 	void Update () {

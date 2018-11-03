@@ -32,3 +32,15 @@ MonoBehaviour:
   lineGradiantColor: {r: 1, g: 1, b: 1, a: 1}
   lineGrid: {fileID: 21300000, guid: 68054af9dfe120448b6ac39ccf48ff3e, type: 3}
   lineGridColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+  one: {fileID: 21300000, guid: d6cfee7126ea7db47875e7be12cf5472, type: 3}
+  two: {fileID: 21300000, guid: 1af2d6bd3fae51f4594f78090fc6a54f, type: 3}
+  three: {fileID: 21300000, guid: 74499c7072bd6984e9e23acf9c6bf697, type: 3}
+  minus: {fileID: 21300000, guid: f28df8c22f3d8644eaeda3f58f11a86f, type: 3}
+  numberSize: {x: 0.75, y: 0.75, z: 0.75}
+  numberColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
+  bomb: {fileID: 21300000, guid: 8e488ad39dab0445e9f9c24b9f0be75b, type: 3}
+  bombSize: {x: 0.8, y: 0.8, z: 0.8}
+  bombColor: {r: 0.1792453, g: 0.1750178, b: 0.1750178, a: 1}
+  arrow: {fileID: 21300000, guid: 3094434a7bbf64ceaa9998294597b3cc, type: 3}
+  arrowSize: {x: 0.8, y: 0.8, z: 0.8}
+  arrowColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class TutorialText : MonoBehaviour {
 
+    [TextArea]
     public string text;
     public Text textBox;
 

@@ -17,11 +17,11 @@ public class Triangle : FlexibleElement
     {
         base.OnSkinUI();
 
-        sr_background.sprite = data.triangleBackground;
-        sr_border_inner.sprite = data.triangleInnerBorder;
-        sr_border_outer.sprite = data.triangleOuterBorder;
-        sr_gradiant.sprite = data.triangleGradiant;
-        sr_gradiant_hole.sprite = data.triangleGradiantWithHole;
+        //sr_background.sprite = data.triangleBackground;
+        //sr_border_inner.sprite = data.triangleInnerBorder;
+        //sr_border_outer.sprite = data.triangleOuterBorder;
+        //sr_gradiant.sprite = data.triangleGradiant;
+        //sr_gradiant_hole.sprite = data.triangleGradiantWithHole;
 
         //sr_background.color = data.triangleBackgroundColor;
         //sr_border_inner.color = data.triangleInnerBorderColor;
@@ -29,6 +29,6 @@ public class Triangle : FlexibleElement
         //sr_gradiant.color = data.triangleGradiantColor;
         //sr_gradiant_hole.color = data.triangleGradiantWithHoleColor;
 
-        defaultColor = data.triangleBackgroundColor;
+        //defaultColor = data.triangleBackgroundColor;
     }
 }

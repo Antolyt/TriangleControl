@@ -72,7 +72,15 @@ public class MarkLines : MonoBehaviour {
                                 }
                                 else
                                 {
-                                    remainingTriangles.Enqueue(t);
+                                    if (t.controllingPlayer == step[stepIndex].player || t.controllingPlayer < 0)
+                                    {
+                                        remainingTriangles.Enqueue(t);
+                                    }
+                                    else
+                                    {
+                                        isBordered = false;
+                                        break;
+                                    }
                                 }
                             }
                         }

@@ -287,7 +287,15 @@ public class Player : MonoBehaviour {
                             }
                             else
                             {
-                                remainingTriangles.Enqueue(t);
+                                if(t.controllingPlayer == player.activePlayer)
+                                {
+                                    remainingTriangles.Enqueue(t);
+                                }
+                                else
+                                {
+                                    isBordered = false;
+                                    break;
+                                }
                             }
                         }
                     }

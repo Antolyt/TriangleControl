@@ -17,15 +17,14 @@ public class AddPlayer : MonoBehaviour {
 
     public string sceneAfterSelection;
     public string sceneByCancel;
+    public CancelTimer cancelTimer;
 
-    public float[] timeOfCancelPress;    // = time, if not pressed
-    public float cancelTime;
+    public SoundInterface soundInterface;
 
 	// Use this for initialization
 	void Start () {
 		controllerPlayerMatch = new int[4]{ -1, -1, -1, -1 };
         timeStamp = new float[4];
-        timeOfCancelPress = new float[4];
 
         cop = this.transform.GetComponent<ColorOfPlayer>();
 
@@ -54,6 +53,7 @@ public class AddPlayer : MonoBehaviour {
                     if (color >= 0)
                         players[playerIndex].colorImage.color = cop.playerColor[color].color;
                     timeStamp[i] = Time.time;
+                    PlaySound("submit");
                 }
 
                 CancelSelection(i);
@@ -72,6 +72,7 @@ public class AddPlayer : MonoBehaviour {
                                 players[controllerPlayerMatch[i]].colorImage.color = cop.playerColor[color].color;
                             players[controllerPlayerMatch[i]].AnimateLeftArrow();
                             timeStamp[i] = Time.time;
+                            PlaySound("selectionChange");
                         }
                         if (Input.GetAxis("Horizontal" + i) > 0)
                         {
@@ -80,6 +81,7 @@ public class AddPlayer : MonoBehaviour {
                                 players[controllerPlayerMatch[i]].colorImage.color = cop.playerColor[color].color;
                             players[controllerPlayerMatch[i]].AnimateRightArrow();
                             timeStamp[i] = Time.time;
+                            PlaySound("selectionChange");
                         }
                     }
 
@@ -87,6 +89,7 @@ public class AddPlayer : MonoBehaviour {
                     if (Input.GetButtonDown("Submit" + i) || Input.GetButtonDown("Action" + i))
                     {
                         players[controllerPlayerMatch[i]].SetReady(true);
+                        PlaySound("submit");
                     }
 
                     // Go to MainMenu
@@ -117,7 +120,8 @@ public class AddPlayer : MonoBehaviour {
                                     PlayerOptions.playerConfig[controllerPlayerMatch[j]].color = players[controllerPlayerMatch[j]].colorImage.color;
                             }
                         }
-                            SceneManager.LoadScene(sceneAfterSelection);
+                        PlaySound("submit");
+                        SceneManager.LoadScene(sceneAfterSelection);
                     }
                 }
             }
@@ -155,17 +159,11 @@ public class AddPlayer : MonoBehaviour {
 
     public void CancelSelection(int controller)
     {
-        // Go backwards
-        if (Input.GetButton("Cancel" + controller))
-        {
-            if (timeOfCancelPress[controller] + cancelTime <= Time.time)
-            {
-                SceneManager.LoadScene(sceneByCancel);
-            }
-        }
-        else
-        {
-            timeOfCancelPress[controller] = Time.time;
-        }
+        cancelTimer.DoAction(controller);
+    }
+
+    public void PlaySound(string name)
+    {
+        soundInterface.PlaySound(name);
     }
 }
