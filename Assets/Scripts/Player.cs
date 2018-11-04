@@ -372,9 +372,8 @@ public class Player : MonoBehaviour {
         }
         System.Random rnd = new System.Random();
         int randomLine = rnd.Next(0, freeLines.Count);
-        freeLines[randomLine].TakeControl(this);
 
-        IncreaseActivePlayer();
+        updateMode(freeLines[randomLine], this);
     }
 
     public void EndMatch()
