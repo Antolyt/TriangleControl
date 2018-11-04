@@ -69,10 +69,14 @@ public class TrianglePiece : MonoBehaviour {
         switch (functionality)
         {
             case Functionality.normal:
-                triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
-                player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
+                if(triangle.sr_gradiant_hole.color != PlayerOptions.playerConfig[player.activePlayer].color)
+                {
+                    triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
+                    player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
+                }
                 break;
             case Functionality.bomb:
+                player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
                 ActivateBomb(player);
                 break;
             case Functionality.conquerNext:
@@ -117,18 +121,34 @@ public class TrianglePiece : MonoBehaviour {
     {
         foreach(Line l in lines)
         {
+            if (!l)
+                continue;
+
             foreach(TrianglePiece t in l.trianglePieces)
             {
+                if (!t)
+                    continue;
+
                 if(t.gameObject.activeSelf)
                 {
-                    if (t.controllingPlayer > 0)
+                    if (t.controllingPlayer >= 0)
                     {
-                        player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) - points).ToString();
+                        player.players[t.controllingPlayer].score.text = (int.Parse(player.players[t.controllingPlayer].score.text) - t.points).ToString();
                     }
                     t.gameObject.SetActive(false);
                 }
+                foreach(Line l2 in t.lines)
+                {
+                    bool tpActive = false;
+                    foreach(TrianglePiece t2 in l2.trianglePieces)
+                    {
+                        if (t2 && t2.gameObject.activeSelf)
+                            tpActive = true;
+                    }
+                    if (!tpActive)
+                        l2.gameObject.SetActive(false);
+                }
             }
-            l.gameObject.SetActive(false);
         }
     }
 
@@ -198,7 +218,7 @@ public class TrianglePiece : MonoBehaviour {
                         break;
                     case Direction.down:
                         throw new UnityException("conquerNextDirection not correct!");
-                    case Direction.left:
+                    case Direction.downLeft:
                         foreach (TrianglePiece t in lines[2].trianglePieces)
                         {
                             if (t != this)
@@ -208,7 +228,7 @@ public class TrianglePiece : MonoBehaviour {
                             }
                         }
                         break;
-                    case Direction.right:
+                    case Direction.downRight:
                         foreach (TrianglePiece t in lines[1].trianglePieces)
                         {
                             if (t != this)
@@ -237,7 +257,7 @@ public class TrianglePiece : MonoBehaviour {
                             }
                         }
                         break;
-                    case Direction.left:
+                    case Direction.upLeft:
                         foreach (TrianglePiece t in lines[2].trianglePieces)
                         {
                             if (t != this)
@@ -247,7 +267,7 @@ public class TrianglePiece : MonoBehaviour {
                             }
                         }
                         break;
-                    case Direction.right:
+                    case Direction.upRight:
                         foreach (TrianglePiece t in lines[0].trianglePieces)
                         {
                             if (t != this)

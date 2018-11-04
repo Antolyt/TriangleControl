@@ -360,6 +360,23 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public void TakeControlOfRandomLine()
+    {
+        List<Line> freeLines = new List<Line>();
+        foreach (Line line in triangleComplex.lines)
+        {
+            if(line && line.gameObject.activeSelf && line.controllingPlayer < 0)
+            {
+                freeLines.Add(line);
+            }
+        }
+        System.Random rnd = new System.Random();
+        int randomLine = rnd.Next(0, freeLines.Count);
+        freeLines[randomLine].TakeControl(this);
+
+        IncreaseActivePlayer();
+    }
+
     public void EndMatch()
     {
         actionOnMatchEnd.Invoke();

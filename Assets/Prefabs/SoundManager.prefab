@@ -662,7 +662,7 @@ MonoBehaviour:
   - name: switchLine
     audioClip: {fileID: 8300000, guid: b393df4c219057a45a848b66f645954c, type: 3}
   - name: takeControl
-    audioClip: {fileID: 0}
+    audioClip: {fileID: 8300000, guid: 7535a5b2132320740b5bf9ba67f8556a, type: 3}
   - name: explosion
     audioClip: {fileID: 8300000, guid: b26595ebeba50ea45a73f9db11c7649c, type: 3}
   - name: timeIsTicking

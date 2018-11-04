@@ -30,7 +30,7 @@ public class TriangleComplex : MonoBehaviour {
             bool tpConquerable = true;
             foreach(Line line in tp.lines)
             {
-                if (!line)
+                if (!line || line.controllingPlayer < 0)
                     continue;
 
                 // break if triangle is not conquerable

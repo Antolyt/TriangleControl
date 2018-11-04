@@ -271,8 +271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fbaf057d9ddcaf45b8064c7417110e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: If you seround an area, where your opponent controls a triangle, it does not
-    can as serounded.
+  text: If you surround an area, where your opponent controls a triangle, it does
+    not count as surrounded.
   textBox: {fileID: 89124725}
 --- !u!114 &25141512 stripped
 MonoBehaviour:
@@ -2568,7 +2568,7 @@ Prefab:
     - target: {fileID: 114828220195875552, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
         type: 2}
       propertyPath: text
-      value: When playing with an oppont, he will colorize lines, too. By serounding
+      value: When playing with an opponent, he will colorize lines, too. By surrounding
         their line you can overwrite the color.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5204,8 +5204,8 @@ Prefab:
     - target: {fileID: 114828220195875552, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
         type: 2}
       propertyPath: text
-      value: You will encounter bomb. They will active if you take control of the
-        coresponding triangle and destroy it and the connected triangles. You loose
+      value: You will encounter bombs. They will activate if you take control of the
+        corresponding triangle and destroy it and the connected triangles. You lose
         all points of the destroyed triangles.
       objectReference: {fileID: 0}
     - target: {fileID: 114341136633070940, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
@@ -8632,7 +8632,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1017673603524314, guid: 98c512a8766aca648b9ea2cb7bdb32ee, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114828220195875552, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
+        type: 2}
+      propertyPath: text
+      value: In this game, you try to take control over more triangles than you opponent.
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114783065983894504, guid: 98c512a8766aca648b9ea2cb7bdb32ee, type: 2}
@@ -10368,8 +10373,8 @@ Prefab:
         type: 2}
       propertyPath: text
       value: By taking control of triangles with an arrow in it. You take control
-        of the triangle in direction of the arrow, too. If Lines of this triangle
-        are controled by your opponent, you get the control of them.
+        of the triangle in direction of that arrow, too. If Lines of this triangle
+        are controlled by your opponent, you get the control over them.
       objectReference: {fileID: 0}
     - target: {fileID: 114341136633070940, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
         type: 2}
@@ -15908,9 +15913,9 @@ Prefab:
     - target: {fileID: 114828220195875552, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
         type: 2}
       propertyPath: text
-      value: You can get Points depending on the triangle. So try take control of
-        the triangles with many points first and avoid the triangles with negative
-        points. Trianlges without points displayed, wiil give you one point.
+      value: You can get points depending on the triangle. So try to take control
+        of the triangles with many points first and avoid the triangles with negative
+        points. Triangles without points displayed will give you one point.
       objectReference: {fileID: 0}
     - target: {fileID: 114341136633070940, guid: 98c512a8766aca648b9ea2cb7bdb32ee,
         type: 2}
@@ -17863,7 +17868,8 @@ Prefab:
         type: 2}
       propertyPath: text
       value: To take control over one or multiple triangles, colorize lines around
-        them in your color. So they are completely serounded.
+        them. So they are completely surrounded. Watch the time or a line will be
+        selected for you randomly. The game ends when all possible triangles are controlled.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c512a8766aca648b9ea2cb7bdb32ee, type: 2}
