@@ -5,18 +5,23 @@ using UnityEngine.UI;
 
 public class PlayerUIInfo : MonoBehaviour {
 
-    public Image background;
+    public Image playerColor;
+    public float aPlayerColor;
+    public Image activeColor;
+    public float aActiveColor;
     public int controller;
     public Text playerName;
     public Text score;
 
-	// Use this for initialization
-	void Start () {
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public void SetActivePlayerColor(bool active)
+    {
+        if (active)
+        {
+            activeColor.color = new Color(1,1,1,aActiveColor);
+        }
+        else
+        {
+            activeColor.color = new Color(0, 0, 0, aActiveColor);
+        }
+    }
 }

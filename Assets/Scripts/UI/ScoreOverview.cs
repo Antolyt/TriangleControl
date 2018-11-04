@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreOverview : MonoBehaviour {
 
@@ -11,6 +12,8 @@ public class ScoreOverview : MonoBehaviour {
 
     float time;
     public float updateSpeed;
+
+    public UnityEvent actionAfterFinishing;
 
 	// Use this for initialization
 	void Start () {
@@ -47,6 +50,11 @@ public class ScoreOverview : MonoBehaviour {
             currentScore++;
 
             time += updateSpeed;
+        }
+
+        if (currentScore >= maxScore && Input.GetButton("Submit"))
+        {
+            actionAfterFinishing.Invoke();
         }
 	}
 }

@@ -15,10 +15,28 @@ public class SoundInterface : MonoBehaviour {
     {
         foreach (Sound sound in sm.sounds)
         {
+
+
             if (sound.name == name)
             {
                 sm.effectSources[0].clip = sound.audioClip;
                 sm.effectSources[0].Play();
+            }
+        }
+    }
+
+    public void PlaySound(string name, int source)
+    {
+        source %= 4;
+
+        foreach (Sound sound in sm.sounds)
+        {
+            
+
+            if (sound.name == name)
+            {
+                sm.effectSources[source].clip = sound.audioClip;
+                sm.effectSources[source].Play();
             }
         }
     }

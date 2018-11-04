@@ -11,10 +11,13 @@ using UnityEngine.UI;
 public class CountDown : MonoBehaviour {
 
     public int startTime = 3;
-    private float startTimeStemp;
+    [HideInInspector]
+    public float startTimeStemp;
     public Text CountDownText;
     public float timeScaler = 1;
+    public SoundInterface soundInterface;
 
+    private int prevTime;
     public UnityEvent action;
 
 	void Start () {
@@ -23,11 +26,26 @@ public class CountDown : MonoBehaviour {
 	
 	void Update () {
         int time = Mathf.RoundToInt(startTime + (startTimeStemp - Time.time) * timeScaler);
-        if(time < 0)
+        
+        if(time <= 0)
         {
+            //if(soundInterface)
+            //    soundInterface.PlaySound("timeIsUp");
             if (action != null) action.Invoke();
             return;
         }
+        else if (time <= 5 && prevTime != time)
+        {
+            prevTime = time;
+            if(soundInterface)
+                soundInterface.PlaySound("timeIsTicking", 3);
+        }
+            
         CountDownText.text = time.ToString();
 	}
+
+    public void ResetTime()
+    {
+        startTimeStemp = Time.time;
+    }
 }

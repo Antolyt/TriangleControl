@@ -5,6 +5,7 @@ public class GamePlayKeyControl : MonoBehaviour {
 
 	public UnityEvent actionOnCancel;
     public UnityEvent actionOnStart;
+    public UnityEvent actionOnSubmit;
 
     void Update () {
 
@@ -17,6 +18,12 @@ public class GamePlayKeyControl : MonoBehaviour {
         if (Input.GetButtonDown("Start"))
         {
             if (actionOnCancel != null) actionOnStart.Invoke();
+            return;
+        }
+
+        if (Input.GetButton("Submit"))
+        {
+            if (actionOnCancel != null) actionOnSubmit.Invoke();
             return;
         }
     }

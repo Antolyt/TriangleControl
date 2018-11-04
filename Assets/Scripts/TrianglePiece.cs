@@ -283,7 +283,7 @@ public class TrianglePiece : MonoBehaviour {
                         break;
                     case Direction.down:
                         throw new UnityException("conquerNextDirection not correct!");
-                    case Direction.left:
+                    case Direction.downLeft:
                         foreach (TrianglePiece t in lines[2].trianglePieces)
                         {
                             if (t != this)
@@ -293,7 +293,7 @@ public class TrianglePiece : MonoBehaviour {
                             }
                         }
                         break;
-                    case Direction.right:
+                    case Direction.downRight:
                         foreach (TrianglePiece t in lines[1].trianglePieces)
                         {
                             if (t != this)
@@ -322,7 +322,7 @@ public class TrianglePiece : MonoBehaviour {
                             }
                         }
                         break;
-                    case Direction.left:
+                    case Direction.upLeft:
                         foreach (TrianglePiece t in lines[2].trianglePieces)
                         {
                             if (t != this)
@@ -332,7 +332,7 @@ public class TrianglePiece : MonoBehaviour {
                             }
                         }
                         break;
-                    case Direction.right:
+                    case Direction.upRight:
                         foreach (TrianglePiece t in lines[0].trianglePieces)
                         {
                             if (t != this)

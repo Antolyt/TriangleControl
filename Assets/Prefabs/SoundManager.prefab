@@ -151,7 +151,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1840502833699472}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.10815079, y: -0.16503787, z: 0.15494236}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4183873529742010}
@@ -659,3 +659,13 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 89b2221b1e87e0840bf2ee62d2e81750, type: 3}
   - name: submit
     audioClip: {fileID: 8300000, guid: 0dd68badc9d11834cbe1a58fbb191bc4, type: 3}
+  - name: switchLine
+    audioClip: {fileID: 8300000, guid: b393df4c219057a45a848b66f645954c, type: 3}
+  - name: takeControl
+    audioClip: {fileID: 0}
+  - name: explosion
+    audioClip: {fileID: 8300000, guid: b26595ebeba50ea45a73f9db11c7649c, type: 3}
+  - name: timeIsTicking
+    audioClip: {fileID: 8300000, guid: 1b49a47749b51234bb41e3df6946e8b2, type: 3}
+  - name: timeIsUp
+    audioClip: {fileID: 8300000, guid: e7a2a964f3993744b9344418bd76313f, type: 3}

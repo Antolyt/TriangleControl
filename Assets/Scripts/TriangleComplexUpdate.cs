@@ -18,7 +18,24 @@ public class TriangleComplexUpdate : MonoBehaviour {
             {
                 if (line.gameObject.activeSelf)
                 {
-                    tmpLines.Add(line);
+                    bool allTpNull = true;
+                    foreach (TrianglePiece tp in line.trianglePieces)
+                    {
+                        if (tp && tp.gameObject.activeSelf)
+                        {
+                            allTpNull = false;
+                            break;
+                        }
+                            
+                    }
+                    if(allTpNull)
+                    {
+                        DestroyImmediate(line.gameObject);
+                    }
+                    else
+                    {
+                        tmpLines.Add(line);
+                    }
                 }
                 else
                 {

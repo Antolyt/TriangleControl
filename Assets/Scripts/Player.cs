@@ -4,14 +4,18 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour {
 
     public new Camera camera;
+    public SoundInterface soundInterface;
     public TriangleComplex triangleComplex;
-
+    public CountDown countDown;
+    [Space]
     public int activePlayer = 0;
-    [HideInInspector]public int numberOfPlayers = 0;
+    [HideInInspector]
+    public int numberOfPlayers = 0;
     public PlayerUIInfo[] players;
     public float cursorSpeed;
     public float cursorCap;         // Between 0 and 1
@@ -25,6 +29,8 @@ public class Player : MonoBehaviour {
     public delegate void UpdateMode(Line line, Player player);
     public UpdateMode updateMode;
 
+    public UnityEvent actionOnMatchEnd;
+
     private void Start()
     {
         //updateMode = UpdateMode_SingleTriangle;
@@ -33,7 +39,13 @@ public class Player : MonoBehaviour {
         {
             if (PlayerOptions.playerConfig[i].controller >= 0)
             {
-                players[i].background.color = PlayerOptions.playerConfig[i].color;
+                if(i == 0)
+                {
+                    players[i].SetActivePlayerColor(true);
+                }
+
+                Color tmpC = PlayerOptions.playerConfig[i].color;
+                players[i].playerColor.color = new Color(tmpC.r, tmpC.g, tmpC.b, players[i].aPlayerColor);
                 playerCursors[i].GetComponent<SpriteRenderer>().color = PlayerOptions.playerConfig[i].color;
                 playerCursors[i].SetActive(true);
                 PlayerOptions.playerConfig[i].score = players[i].score;
@@ -51,10 +63,10 @@ public class Player : MonoBehaviour {
         float a = 0;
         for (int i = 0; i < players.Length; i++)
         {
-            r += players[i].background.color.r;
-            g += players[i].background.color.g;
-            b += players[i].background.color.b;
-            a += players[i].background.color.a;
+            r += players[i].playerColor.color.r;
+            g += players[i].playerColor.color.g;
+            b += players[i].playerColor.color.b;
+            a += players[i].playerColor.color.a;
         }
 
         r /= players.Length;
@@ -68,13 +80,10 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        for(int i = 0; i < numberOfPlayers; i++)
-        {
-            UpdateCursor(i);
-        }
+        UpdateCursor(activePlayer);
 
         // Set roll over color
-        for(int i = 0; i < selectedLines.Length; i++)
+        for (int i = 0; i < selectedLines.Length; i++)
         {
             if (selectedLines[i] == null)
                 continue;
@@ -83,10 +92,10 @@ public class Player : MonoBehaviour {
             float g = selectedLines[i].controllerColor.g;
             float b = selectedLines[i].controllerColor.b;
             float a = selectedLines[i].controllerColor.a;
-            r += players[i].background.color.r;
-            g += players[i].background.color.g;
-            b += players[i].background.color.b;
-            a += players[i].background.color.a;
+            r += players[i].playerColor.color.r;
+            g += players[i].playerColor.color.g;
+            b += players[i].playerColor.color.b;
+            a += players[i].playerColor.color.a;
 
             r /= 2;
             g /= 2;
@@ -158,30 +167,42 @@ public class Player : MonoBehaviour {
         }
         else
         {
-            foreach (TrianglePiece t in selectedLines[player].trianglePieces)
+            foreach (Line l in triangleComplex.lines)
             {
-                if (t == null)
-                    continue;
-
-                foreach (Line l in t.lines)
+                Vector3 tPos = l.transform.position + l.GetCenter();
+                float tmpDis = Vector3.Distance(playerCursors[player].transform.position, tPos);
+                if (tmpDis <= minDis)
                 {
-                    if (l == null)
-                        continue;
-
-                    Vector3 tPos = l.transform.position + l.GetCenter();
-                    float tmpDis = Vector3.Distance(playerCursors[player].transform.position, tPos);
-                    if (tmpDis <= minDis)
-                    {
-                        minDis = tmpDis;
-                        target = l;
-                    }
+                    minDis = tmpDis;
+                    target = l;
                 }
             }
+
+            //foreach (TrianglePiece t in selectedLines[player].trianglePieces)
+            //{
+            //    if (t == null)
+            //        continue;
+
+            //    foreach (Line l in t.lines)
+            //    {
+            //        if (l == null)
+            //            continue;
+
+            //        Vector3 tPos = l.transform.position + l.GetCenter();
+            //        float tmpDis = Vector3.Distance(playerCursors[player].transform.position, tPos);
+            //        if (tmpDis <= minDis)
+            //        {
+            //            minDis = tmpDis;
+            //            target = l;
+            //        }
+            //    }
+            //}
 
             // reset line Color if line was left
             if (selectedLines[player] != target)
             {
                 selectedLines[player].sr_gradiant.color = selectedLines[player].controllerColor;
+                soundInterface.PlaySound("switchLine", 0);
             }
         }
 
@@ -287,7 +308,7 @@ public class Player : MonoBehaviour {
                             }
                             else
                             {
-                                if(t.controllingPlayer == player.activePlayer)
+                                if(t.controllingPlayer == player.activePlayer || t.controllingPlayer < 0)
                                 {
                                     remainingTriangles.Enqueue(t);
                                 }
@@ -316,7 +337,32 @@ public class Player : MonoBehaviour {
                 }
             }
         }
-        player.activePlayer = (player.activePlayer + 1) % player.numberOfPlayers;
+        player.soundInterface.PlaySound("takeControl", 1);
+        if(!player.triangleComplex.IsSomethingConquerable())
+            player.EndMatch();
+        SetActivePlayer((player.activePlayer + 1) % player.numberOfPlayers, player);
+        player.countDown.startTimeStemp = Time.time;
+    }
+
+    public void IncreaseActivePlayer()
+    {
+        SetActivePlayer((activePlayer + 1) % numberOfPlayers, this);
+    }
+
+    public static void SetActivePlayer(int i, Player player)
+    {
+        if (i >= player.numberOfPlayers)
+            throw new Exception("Cannot set active player bigger then existing players!");
+        player.activePlayer = i;
+        for(int j = 0; j < player.players.Length; j++)
+        {
+            player.players[j].SetActivePlayerColor(i == j);
+        }
+    }
+
+    public void EndMatch()
+    {
+        actionOnMatchEnd.Invoke();
     }
 
     public static void UpdateMode_MultipleTriangleWithOverride(Line updatedLine, Player player)
