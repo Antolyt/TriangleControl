@@ -328,7 +328,10 @@ public class Player : MonoBehaviour {
             {
                 foreach(TrianglePiece t in checkedTriangles)
                 {
-                    t.TakeControl(player);
+                    if (t.gameObject.activeSelf)
+                    {
+                        t.TakeControl(player);
+                    }
                 }
                 
                 foreach(Line l in checkedLines)
