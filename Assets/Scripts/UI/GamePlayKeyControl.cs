@@ -17,13 +17,13 @@ public class GamePlayKeyControl : MonoBehaviour {
 
         if (Input.GetButtonDown("Start"))
         {
-            if (actionOnCancel != null) actionOnStart.Invoke();
+            if (actionOnStart != null) actionOnStart.Invoke();
             return;
         }
 
         if (Input.GetButton("Submit"))
         {
-            if (actionOnCancel != null) actionOnSubmit.Invoke();
+            if (actionOnSubmit != null) actionOnSubmit.Invoke();
             return;
         }
     }

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class TriangleComplexUpdate : MonoBehaviour {
 
     public TriangleComplex triangleComplex;
+    public Line referenceLine;
 
     public void RemoveDeactivatedElements()
     {
@@ -203,6 +204,99 @@ public class TriangleComplexUpdate : MonoBehaviour {
                 default:
                     break;
             }
+        }
+    }
+
+    public void UpdateParticleSystem()
+    {
+        ParticleSystem refSystem = referenceLine.GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule refSetting = refSystem.main;
+        ParticleSystem.EmissionModule refEmission = refSystem.emission;
+        ParticleSystem.RotationOverLifetimeModule refRotationLifeTime = refSystem.rotationOverLifetime;
+        ParticleSystem.SizeOverLifetimeModule refSizeLifetime = refSystem.sizeOverLifetime;
+        ParticleSystemRenderer refRenderer = refSystem.GetComponent<ParticleSystemRenderer>();
+        ParticleSystem.Burst refBurst = refEmission.GetBurst(0);
+
+        foreach (Line line in triangleComplex.lines)
+        {
+            ParticleSystem particleSystem = line.GetComponent<ParticleSystem>();
+            ParticleSystem.MainModule particleSettings = particleSystem.main;
+            ParticleSystem.EmissionModule particleEmission = particleSystem.emission;
+            ParticleSystem.RotationOverLifetimeModule particleRotationLifeTime = particleSystem.rotationOverLifetime;
+            ParticleSystem.SizeOverLifetimeModule particleSizeLifetime = particleSystem.sizeOverLifetime;
+            ParticleSystemRenderer particleRenderer = particleSystem.GetComponent<ParticleSystemRenderer>();
+
+            particleSettings.customSimulationSpace = refSetting.customSimulationSpace;
+            particleSettings.duration = refSetting.duration;
+            particleSettings.emitterVelocityMode = refSetting.emitterVelocityMode;
+            particleSettings.flipRotation = refSetting.flipRotation;
+            particleSettings.gravityModifier = refSetting.gravityModifier;
+            particleSettings.gravityModifierMultiplier = refSetting.gravityModifierMultiplier;
+            particleSettings.loop = refSetting.loop;
+            particleSettings.maxParticles = refSetting.maxParticles;
+            particleSettings.playOnAwake = refSetting.playOnAwake;
+            particleSettings.prewarm = refSetting.prewarm;
+            particleSettings.scalingMode = refSetting.scalingMode;
+            particleSettings.simulationSpace = refSetting.simulationSpace;
+            particleSettings.simulationSpeed = refSetting.simulationSpeed;
+            particleSettings.startColor = refSetting.startColor;
+            particleSettings.startDelay = refSetting.startDelay;
+            particleSettings.startDelayMultiplier = refSetting.startDelayMultiplier;
+            particleSettings.startLifetime = refSetting.startLifetime;
+            particleSettings.startLifetimeMultiplier = refSetting.startLifetimeMultiplier;
+            particleSettings.startRotation = refSetting.startRotation;
+            particleSettings.startRotation3D = refSetting.startRotation3D;
+            particleSettings.startRotationMultiplier = refSetting.startRotationMultiplier;
+            particleSettings.startRotationX = refSetting.startRotationX;
+            particleSettings.startRotationXMultiplier = refSetting.startRotationXMultiplier;
+            particleSettings.startRotationY = refSetting.startRotationY;
+            particleSettings.startRotationYMultiplier = refSetting.startRotationYMultiplier;
+            particleSettings.startRotationZ = refSetting.startRotationZ;
+            particleSettings.startRotationZMultiplier = refSetting.startRotationZMultiplier;
+            particleSettings.startSize = refSetting.startSize;
+            particleSettings.startSize3D = refSetting.startSize3D;
+            particleSettings.startSizeMultiplier = refSetting.startSizeMultiplier;
+            particleSettings.startSizeX = refSetting.startSizeX;
+            particleSettings.startSizeXMultiplier = refSetting.startSizeXMultiplier;
+            particleSettings.startSizeY = refSetting.startSizeY;
+            particleSettings.startSizeYMultiplier = refSetting.startSizeYMultiplier;
+            particleSettings.startSizeZ = refSetting.startSizeZ;
+            particleSettings.startSizeZMultiplier = refSetting.startSizeZMultiplier;
+            particleSettings.startSpeed = refSetting.startSpeed;
+            particleSettings.startSpeedMultiplier = refSetting.startSpeedMultiplier;
+            particleSettings.stopAction = refSetting.stopAction;
+            particleSettings.useUnscaledTime = refSetting.useUnscaledTime;
+
+            particleEmission.burstCount = refEmission.burstCount;
+            particleEmission.enabled = refEmission.enabled;
+            particleEmission.rateOverDistance = refEmission.rateOverDistance;
+            particleEmission.rateOverDistanceMultiplier = refEmission.rateOverDistanceMultiplier;
+            particleEmission.rateOverTime = refEmission.rateOverTime;
+            particleEmission.rateOverTimeMultiplier = refEmission.rateOverTimeMultiplier;
+
+            particleRotationLifeTime.enabled = refRotationLifeTime.enabled;
+            particleRotationLifeTime.separateAxes = refRotationLifeTime.separateAxes;
+            particleRotationLifeTime.x = refRotationLifeTime.x;
+            particleRotationLifeTime.xMultiplier = refRotationLifeTime.xMultiplier;
+            particleRotationLifeTime.y = refRotationLifeTime.y;
+            particleRotationLifeTime.yMultiplier = refRotationLifeTime.yMultiplier;
+            particleRotationLifeTime.z = refRotationLifeTime.z;
+            particleRotationLifeTime.zMultiplier = refRotationLifeTime.zMultiplier;
+
+            particleSizeLifetime.enabled = refSizeLifetime.enabled;
+            particleSizeLifetime.separateAxes = refSizeLifetime.separateAxes;
+            particleSizeLifetime.size = refSizeLifetime.size;
+            particleSizeLifetime.sizeMultiplier = refSizeLifetime.sizeMultiplier;
+            particleSizeLifetime.x = refSizeLifetime.x;
+            particleSizeLifetime.xMultiplier = refSizeLifetime.xMultiplier;
+            particleSizeLifetime.y = refSizeLifetime.y;
+            particleSizeLifetime.yMultiplier = refSizeLifetime.yMultiplier;
+            particleSizeLifetime.z = refSizeLifetime.z;
+            particleSizeLifetime.zMultiplier = refSizeLifetime.zMultiplier;
+
+            particleRenderer.minParticleSize = refRenderer.minParticleSize;
+
+            particleEmission.SetBursts(new ParticleSystem.Burst[] { refBurst });
         }
     }
 }

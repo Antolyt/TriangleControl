@@ -16,9 +16,13 @@ public class TriangleComplexUpdateEditor : Editor
         {
             updater.RemoveDeactivatedElements();
         }
-        if (GUILayout.Button("Add FunctionalityImages"))
+        if (GUILayout.Button("Update FunctionalityImages"))
         {
             updater.UpdateFunctionalityImage();
+        }
+        if (GUILayout.Button("Update Particle System"))
+        {
+            updater.UpdateParticleSystem();
         }
     }
 }
