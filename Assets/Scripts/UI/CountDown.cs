@@ -20,32 +20,43 @@ public class CountDown : MonoBehaviour {
     private int prevTime;
     public UnityEvent action;
 
+    private bool stopped;
+
 	void Start () {
         startTimeStemp = Time.time;
     }
 	
 	void Update () {
-        int time = Mathf.RoundToInt(startTime + (startTimeStemp - Time.time) * timeScaler);
-        
-        if(time <= 0)
+        if (!stopped)
         {
-            //if(soundInterface)
-            //    soundInterface.PlaySound("timeIsUp");
-            if (action != null) action.Invoke();
-            return;
+            int time = Mathf.RoundToInt(startTime + (startTimeStemp - Time.time) * timeScaler);
+
+            if (time <= 0)
+            {
+                //if(soundInterface)
+                //    soundInterface.PlaySound("timeIsUp");
+                if (action != null) action.Invoke();
+                return;
+            }
+            else if (time <= 5 && prevTime != time)
+            {
+                prevTime = time;
+                if (soundInterface)
+                    soundInterface.PlaySound("timeIsTicking", 3);
+            }
+
+            CountDownText.text = time.ToString();
         }
-        else if (time <= 5 && prevTime != time)
-        {
-            prevTime = time;
-            if(soundInterface)
-                soundInterface.PlaySound("timeIsTicking", 3);
-        }
-            
-        CountDownText.text = time.ToString();
 	}
 
     public void ResetTime()
     {
         startTimeStemp = Time.time;
+        stopped = false;
+    }
+
+    public void Stop()
+    {
+        stopped = true;
     }
 }

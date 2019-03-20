@@ -31,6 +31,13 @@ public class Player : MonoBehaviour {
 
     public UnityEvent actionOnMatchEnd;
 
+    public float updateOffsetTime;
+    private float updateStartTime;
+    private List<Line> linesToUpdate;
+    private List<TrianglePiece> trianglesToUpdate;
+    private List<TrianglePiece> bombTrianglesToUpdate;
+    private List<TrianglePiece> conquerNextTriangleToUpdate;
+
     private void Start()
     {
         //updateMode = UpdateMode_SingleTriangle;
@@ -75,71 +82,149 @@ public class Player : MonoBehaviour {
         a /= players.Length;
 
         lineColor = new Color(r, g, b, a);
+
+        linesToUpdate = new List<Line>();
+        trianglesToUpdate = new List<TrianglePiece>();
+        bombTrianglesToUpdate = new List<TrianglePiece>();
+        conquerNextTriangleToUpdate = new List<TrianglePiece>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateCursor(activePlayer);
-
-        // Set roll over color
-        for (int i = 0; i < selectedLines.Length; i++)
+        if(linesToUpdate.Count > 0 || trianglesToUpdate.Count > 0 || bombTrianglesToUpdate.Count > 0 || conquerNextTriangleToUpdate.Count > 0)
         {
-            if (selectedLines[i] == null)
-                continue;
-
-            float r = selectedLines[i].controllerColor.r;
-            float g = selectedLines[i].controllerColor.g;
-            float b = selectedLines[i].controllerColor.b;
-            float a = selectedLines[i].controllerColor.a;
-            r += players[i].playerColor.color.r;
-            g += players[i].playerColor.color.g;
-            b += players[i].playerColor.color.b;
-            a += players[i].playerColor.color.a;
-
-            r /= 2;
-            g /= 2;
-            b /= 2;
-            a /= 2;
-
-            selectedLines[i].sr_gradiant.color = new Color(r, g, b, a);
-        }
-
-        // MouseControl
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-
-        }
-
-        if (PlayerOptions.playerConfig[activePlayer].controller >= 0 && Input.GetButtonDown("Action" + PlayerOptions.playerConfig[activePlayer].controller))
-        {
-            Vector3 pos = Vector3.zero;
-            if(Input.GetKeyDown(KeyCode.Mouse0))
-                pos = camera.ScreenToWorldPoint(Input.mousePosition) - Vector3.forward * camera.transform.position.z;
-            if(Input.GetButtonDown("Action" + players[activePlayer].controller))
-                pos = playerCursors[activePlayer].transform.position;
-            //Line nearestLine = GetNearestLine(pos);
-            Line nearestLine = selectedLines[activePlayer];
-
-            if (nearestLine.controllingPlayer < 0)
+            if (linesToUpdate.Count > 0)
             {
-                updateMode(nearestLine, this);
+                if (updateStartTime + updateOffsetTime < Time.time)
+                {
+                    linesToUpdate[0].TakeControl(this);
+                    soundInterface.PlaySound("takeControl", 1);
+                    linesToUpdate.RemoveAt(0);
+
+                    updateStartTime = Time.time;
+                }
             }
-        }
-
-        // Update Player cursors
-        for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
-        {
-            if (PlayerOptions.playerConfig[i].controller >= 0)
+            else if (trianglesToUpdate.Count > 0)
             {
-                Vector3 input = new Vector3(Input.GetAxis("Horizontal" + PlayerOptions.playerConfig[i].controller), Input.GetAxis("Vertical" + PlayerOptions.playerConfig[i].controller));
-                Vector3 capping = input.normalized;
-                capping = capping * cursorCap;
-                if (input.magnitude > capping.magnitude)
-                    input = capping;
-                playerCursors[i].transform.position += cursorSpeed * input.x * Vector3.right + cursorSpeed * input.y * Vector3.down;
-                //playerCursors[i].transform.position += cursorSpeed * Math.Max(-capping.x, Math.Min(capping.x, input.x)) * Vector3.right + cursorSpeed * Math.Max(-capping.y, Math.Min(capping.y, input.y)) * Vector3.down;
-                playerCursors[i].transform.position = new Vector3(Math.Min(PlayerOptions.horzExtent, Math.Max(-PlayerOptions.horzExtent, playerCursors[i].transform.position.x)), Math.Min(PlayerOptions.vertExtent, Math.Max(-PlayerOptions.vertExtent, playerCursors[i].transform.position.y)), 0);
+                if (trianglesToUpdate[0].gameObject.activeSelf)
+                {
+                    if (updateStartTime + updateOffsetTime < Time.time)
+                    {
+                        trianglesToUpdate[0].TakeControl(this);
+                        if (trianglesToUpdate[0].functionality == Functionality.bomb)
+                        {
+                            bombTrianglesToUpdate.Add(trianglesToUpdate[0]);
+                            bombTrianglesToUpdate.OrderBy(i => i.id);
+                        }
+                        else if(trianglesToUpdate[0].functionality == Functionality.conquerNext)
+                        {
+                            conquerNextTriangleToUpdate.Add(trianglesToUpdate[0]);
+                            conquerNextTriangleToUpdate.OrderBy(i => i.id);
+                        }
+                        soundInterface.PlaySound("takeControl", 1);
+                        trianglesToUpdate.RemoveAt(0);
+
+                        updateStartTime = Time.time;
+                    }
+                }
+                else
+                    trianglesToUpdate.RemoveAt(0);
+            }
+            else if (conquerNextTriangleToUpdate.Count > 0)
+            {
+                if (updateStartTime + updateOffsetTime < Time.time)
+                {
+                    conquerNextTriangleToUpdate[0].ConquerNext(this);
+                    soundInterface.PlaySound("takeControl", 1);
+                    conquerNextTriangleToUpdate.RemoveAt(0);
+
+                    updateStartTime = Time.time;
+                }
+            }
+            else if (bombTrianglesToUpdate.Count > 0)
+            {
+                if (updateStartTime + updateOffsetTime < Time.time)
+                {
+                    bombTrianglesToUpdate[0].ActivateBomb(this);
+                    soundInterface.PlaySound("explosion", 1);
+                    bombTrianglesToUpdate.RemoveAt(0);
+
+                    updateStartTime = Time.time;
+                }
+            }
+
+            if(linesToUpdate.Count == 0 && trianglesToUpdate.Count == 0)
+            {
+                SetActivePlayer((activePlayer + 1) % numberOfPlayers, this);
+                countDown.ResetTime();
+            }
+
+            if (!triangleComplex.IsSomethingConquerable())
+                EndMatch();
+        }
+        else
+        {
+            UpdateCursor(activePlayer);
+
+            // Set roll over color
+            for (int i = 0; i < selectedLines.Length; i++)
+            {
+                if (selectedLines[i] == null)
+                    continue;
+
+                float r = selectedLines[i].controllerColor.r;
+                float g = selectedLines[i].controllerColor.g;
+                float b = selectedLines[i].controllerColor.b;
+                float a = selectedLines[i].controllerColor.a;
+                r += players[i].playerColor.color.r;
+                g += players[i].playerColor.color.g;
+                b += players[i].playerColor.color.b;
+                a += players[i].playerColor.color.a;
+
+                r /= 2;
+                g /= 2;
+                b /= 2;
+                a /= 2;
+
+                selectedLines[i].sr_gradiant.color = new Color(r, g, b, a);
+            }
+
+            // MouseControl
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+
+            }
+
+            if (PlayerOptions.playerConfig[activePlayer].controller >= 0 && Input.GetButtonDown("Action" + PlayerOptions.playerConfig[activePlayer].controller))
+            {
+                Vector3 pos = Vector3.zero;
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                    pos = camera.ScreenToWorldPoint(Input.mousePosition) - Vector3.forward * camera.transform.position.z;
+                if (Input.GetButtonDown("Action" + players[activePlayer].controller))
+                    pos = playerCursors[activePlayer].transform.position;
+                //Line nearestLine = GetNearestLine(pos);
+                Line nearestLine = selectedLines[activePlayer];
+
+                if (nearestLine.controllingPlayer < 0)
+                {
+                    updateMode(nearestLine, this);
+                }
+            }
+
+            // Update Player cursors
+            for (int i = 0; i < PlayerOptions.playerConfig.Length; i++)
+            {
+                if (PlayerOptions.playerConfig[i].controller >= 0)
+                {
+                    Vector3 input = new Vector3(Input.GetAxis("Horizontal" + PlayerOptions.playerConfig[i].controller), Input.GetAxis("Vertical" + PlayerOptions.playerConfig[i].controller));
+                    Vector3 capping = input.normalized;
+                    capping = capping * cursorCap;
+                    if (input.magnitude > capping.magnitude)
+                        input = capping;
+                    playerCursors[i].transform.position += cursorSpeed * input.x * Vector3.right + cursorSpeed * input.y * Vector3.down;
+                    playerCursors[i].transform.position = new Vector3(Math.Min(PlayerOptions.horzExtent, Math.Max(-PlayerOptions.horzExtent, playerCursors[i].transform.position.x)), Math.Min(PlayerOptions.vertExtent, Math.Max(-PlayerOptions.vertExtent, playerCursors[i].transform.position.y)), 0);
+                }
             }
         }
     }
@@ -177,26 +262,6 @@ public class Player : MonoBehaviour {
                     target = l;
                 }
             }
-
-            //foreach (TrianglePiece t in selectedLines[player].trianglePieces)
-            //{
-            //    if (t == null)
-            //        continue;
-
-            //    foreach (Line l in t.lines)
-            //    {
-            //        if (l == null)
-            //            continue;
-
-            //        Vector3 tPos = l.transform.position + l.GetCenter();
-            //        float tmpDis = Vector3.Distance(playerCursors[player].transform.position, tPos);
-            //        if (tmpDis <= minDis)
-            //        {
-            //            minDis = tmpDis;
-            //            target = l;
-            //        }
-            //    }
-            //}
 
             // reset line Color if line was left
             if (selectedLines[player] != target)
@@ -326,25 +391,20 @@ public class Player : MonoBehaviour {
 
             if(isBordered)
             {
-                foreach(TrianglePiece t in checkedTriangles)
-                {
-                    if (t.gameObject.activeSelf)
-                    {
-                        t.TakeControl(player);
-                    }
-                }
-                
-                foreach(Line l in checkedLines)
-                {
-                    l.TakeControl(player);
-                }
+                SetUpdateLinesAndTriangles(checkedLines, checkedTriangles, player);
+                player.updateStartTime = Time.time;
             }
         }
         player.soundInterface.PlaySound("takeControl", 1);
-        if(!player.triangleComplex.IsSomethingConquerable())
-            player.EndMatch();
-        SetActivePlayer((player.activePlayer + 1) % player.numberOfPlayers, player);
-        player.countDown.startTimeStemp = Time.time;
+        if(player.linesToUpdate.Count > 0 || player.trianglesToUpdate.Count > 0)
+        {
+            player.countDown.Stop();
+        }
+        else
+        {
+            SetActivePlayer((player.activePlayer + 1) % player.numberOfPlayers, player);
+            player.countDown.ResetTime();
+        }
     }
 
     public void IncreaseActivePlayer()
@@ -392,6 +452,26 @@ public class Player : MonoBehaviour {
     public static void TriangleWasFilled()
     {
         
+    }
+
+    public static void SetUpdateLinesAndTriangles(List<Line> lines, List<TrianglePiece> triangles, Player player)
+    {
+        foreach(Line line in lines)
+        {
+            if (line.controllingPlayer != player.activePlayer)
+                player.linesToUpdate.Add(line);
+        }
+        foreach (TrianglePiece tp in triangles)
+        {
+            if (tp.controllingPlayer != player.activePlayer)
+                player.trianglesToUpdate.Add(tp);
+        }
+        player.trianglesToUpdate = triangles;
+    }
+
+    public static void UpdateLinesAndTriangles(List<Line> lines, List<TrianglePiece> triangles, Player player)
+    {
+
     }
 }
 

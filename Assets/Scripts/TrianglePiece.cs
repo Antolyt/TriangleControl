@@ -66,22 +66,21 @@ public class TrianglePiece : MonoBehaviour {
     public void TakeControl(Player player)
     {
         controllingPlayer = player.activePlayer;
+        if(triangle.sr_gradiant_hole.color != PlayerOptions.playerConfig[player.activePlayer].color)
+        {
+            triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
+            player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
+        }
+    }
+
+    public void ActivateSpecial(Player player)
+    {
         switch (functionality)
         {
-            case Functionality.normal:
-                if(triangle.sr_gradiant_hole.color != PlayerOptions.playerConfig[player.activePlayer].color)
-                {
-                    triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
-                    player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
-                }
-                break;
             case Functionality.bomb:
-                player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
                 ActivateBomb(player);
                 break;
             case Functionality.conquerNext:
-                triangle.sr_gradiant_hole.color = PlayerOptions.playerConfig[player.activePlayer].color;
-                player.players[player.activePlayer].score.text = (int.Parse(player.players[player.activePlayer].score.text) + points).ToString();
                 ConquerNext(player);
                 break;
         }

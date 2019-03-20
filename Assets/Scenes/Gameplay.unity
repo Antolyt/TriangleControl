@@ -8754,6 +8754,11 @@ Prefab:
       propertyPath: actionOnMatchEnd.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 2048157507}
+    - target: {fileID: 114133180407191412, guid: f5d35a5ee69547544ba1a0b5466faef4,
+        type: 2}
+      propertyPath: updateOffsetTime
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5d35a5ee69547544ba1a0b5466faef4, type: 2}
   m_IsPrefabAsset: 0

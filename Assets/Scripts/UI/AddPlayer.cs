@@ -90,6 +90,8 @@ public class AddPlayer : MonoBehaviour {
                     {
                         players[controllerPlayerMatch[i]].SetReady(true);
                         PlaySound("submit");
+
+                        
                     }
 
                     // Go to MainMenu
@@ -155,6 +157,18 @@ public class AddPlayer : MonoBehaviour {
             }
         }
         return -1;
+    }
+
+    public bool AllPlayerReady()
+    {
+        bool allready = true;
+        for (int i = 0; i < players.Length; i++)
+        {
+            if(players[i].ready)
+            {
+
+            }
+        }
     }
 
     public void CancelSelection(int controller)

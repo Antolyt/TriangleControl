@@ -70,7 +70,7 @@ public class SaveScore : MonoBehaviour {
 
     public static void AddPlayerToScoreTable(string name)
     {
-        scoreData.scoreNames.Add(new ScoreName(Score.score, name));
+        //scoreData.scoreNames.Add(new ScoreName(Score.score, name));
         scoreData.scoreNames.Sort();
         if(scoreData.scoreNames.Count > 20)
             scoreData.scoreNames.RemoveAt(scoreData.scoreNames.Count - 1);

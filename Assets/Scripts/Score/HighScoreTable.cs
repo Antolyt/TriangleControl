@@ -43,7 +43,7 @@ public class HighScoreTable : MonoBehaviour {
                     inputField.transform.position = nameScores[i].name.transform.position;
                     es.SetSelectedGameObject(inputField);
                     nameScores[i].name.text = "";
-                    nameScores[i].score.text = Score.score.ToString();
+                    //nameScores[i].score.text = Score.score.ToString();
                     inputPlaced = true;
                 }
                 // write score from savefile
@@ -60,7 +60,7 @@ public class HighScoreTable : MonoBehaviour {
                 inputField.transform.position = nameScores[i].name.transform.position;
                 es.SetSelectedGameObject(inputField);
                 nameScores[i].name.text = "";
-                nameScores[i].score.text = Score.score.ToString();
+                //nameScores[i].score.text = Score.score.ToString();
                 inputPlaced = true;
                 break;
             }
